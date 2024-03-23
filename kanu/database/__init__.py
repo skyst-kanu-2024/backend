@@ -26,4 +26,6 @@ class Database:
     
     def commit(self):
         self.connection.commit()
-    
+
+def setup():
+    pass

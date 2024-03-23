@@ -13,3 +13,10 @@ import kanu.hobby
 import kanu.room
 import kanu.message
 import kanu.location
+
+kanu.database.setup()
+kanu.user.setup()
+kanu.auth.setup()
+kanu.hobby.setup()
+kanu.room.setup()
+kanu.message.setup()
