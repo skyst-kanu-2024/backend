@@ -267,19 +267,6 @@ def get_message():
     rtn = {"messages": [message.to_dict() for message in messages]}
     return json.dumps(rtn, ensure_ascii=False), 200
 
-@app.route("/api/dtoken", methods=["POST"])
-def set_device_token():
-    if not is_session_valid(request.headers):
-        return {"message": "invalid session"}, 401
-    
-    required_fields = ["token"]
-    if not arg_check(required_fields, request.json):
-        return {"message": "missing required fields"}, 400
-    
-    user = kanu.user.get_user(session=request.headers.get("sessionid"))
-    kanu.user.set_device_token(user, request.json["token"])
-    return {"message": "success"}, 200
-
 dtoken = []
 dtokenmap = {}
 
