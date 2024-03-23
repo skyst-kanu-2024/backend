@@ -4,16 +4,11 @@ import pymysql.cursors
 
 class Database:
     def __init__(self):
-        host = kanu.config.host
-        user = kanu.config.user
-        password = kanu.config.password
-        db = kanu.config.db
-        
         self.connection = pymysql.connect(
-            host=host,
-            user=user,
-            password=password,
-            db=db,
+            host=kanu.config.host,
+            user=kanu.config.user,
+            password=kanu.config.password,
+            db=kanu.config.database,
             charset='utf8mb4',
             autocommit=True,
             cursorclass=pymysql.cursors.DictCursor)
