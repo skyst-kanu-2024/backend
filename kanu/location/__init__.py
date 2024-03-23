@@ -146,7 +146,7 @@ def delete_user_hobby( #user가 본인 hobby 삭제 할 때
 
 def create_user_device_token(
     user: User,
-    roomid: Room.id,
+    room: Room,
     devicetoken: str
 ) -> UserDeviceToken:
     conn= kanu.database.Database()
@@ -155,7 +155,7 @@ def create_user_device_token(
         """INSERT INTO 
         user_device_token(user_id, room_id, device_token) 
         VALUES (%s, %f, %f)""",
-        (user.id), (roomid), (devicetoken)
+        (user.id, room.id, devicetoken)
         )
     pass
 
