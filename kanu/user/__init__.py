@@ -136,7 +136,7 @@ def get_user(
     if session:
         user = get_as_session(session)
         conn.close()
-        return User(*user)
+        return User(**user)
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))
@@ -147,7 +147,7 @@ def get_user(
         raise ValueError("Either userid or email must be provided")
     user = cursor.fetchone()
     conn.close()
-    return User(*user)
+    return User(**user)
 
 def update_user(
     user: User,
