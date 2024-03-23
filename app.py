@@ -72,7 +72,7 @@ def get_user():
         return {"message": "invalid session"}, 401
     
     user = kanu.user.get_user(session=request.headers.get("session"))
-    return user.to_json(), 200
+    return user.with_profile(), 200
 
 @app.route("/api/me", methods=["POST"])
 def update_user():
@@ -97,7 +97,7 @@ def get_user_by_id():
         return {"message": "missing required fields 'id'"}, 400
     
     user = kanu.user.get_user(id=request.args.get("id"))
-    return user.to_json(), 200
+    return user.with_profile(), 200
 
 
 # Hobby Name API ENDPOINTS

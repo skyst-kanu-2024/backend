@@ -60,6 +60,18 @@ class User:
     
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False)
+    
+    def with_profile(self) -> str:
+        import kanu.profile
+        this = self.to_dict()
+        profile = kanu.profile.get_profile(self)
+        this.update({
+            "mbti": profile.mbti,
+            "introduce": profile.introduce,
+        })
+
+        return json.dumps(this, ensure_ascii=False)
+        
 
 
 def setup():
