@@ -146,6 +146,8 @@ def get_user_location(
         """, (user.id)
     )
     data = cursor.fetchone()
+    if data is None:
+        return None
     return UserLocation(user=user, lat=data["lat"], lng=data["lng"])
 
 def update_all_user_location( # 안 씀 절대로
