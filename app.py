@@ -263,7 +263,7 @@ def get_message():
         return {"message": "user not in room"}, 403
     
     messages = kanu.message.get_message(room.id)
-    return {"messages": [message.to_json() for message in messages]}, 200
+    return {"messages": [message.to_dict() for message in messages]}, 200
 
 if __name__ == "__main__":
     kanu.setup()

@@ -26,7 +26,7 @@ class Message:
         }
     
     def to_json(self) -> str:
-        return json.dumps(self.to_dict())
+        return json.dumps(self.to_dict(), ensure_ascii=False)
     
 def setup():
     conn = kanu.database.Database()
