@@ -76,12 +76,11 @@ def get_all_user_location(
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        """SELECT * FROM user_location 
-            RIGHT JOIN user ON user.loc_agree = TRUE;
-        """
+        "SELECT user_id, lat, lng FROM user_location"
     )
-    data: list[tuple[str, float, float]] = cursor.fetchall()
-    raise ValueError(data)
+    data = cursor.fetchall()
+    ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng in data]
+    
     return ndata
     
 def get_near_user_distance(
