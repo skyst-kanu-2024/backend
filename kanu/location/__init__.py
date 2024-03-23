@@ -5,13 +5,13 @@ from kanu.room import Room
 from math import radians, cos, sin, sqrt, atan2
 
 class UserLocation:
-    userid: User.id
+    user: User
     lat: float
     lng: float
 
 class UserDeviceToken:
-    userid: User.id
-    roomid: Room.id
+    user: User
+    room: Room
     devicetoken: str
 
 from math import radians, cos, sin, sqrt, atan2
