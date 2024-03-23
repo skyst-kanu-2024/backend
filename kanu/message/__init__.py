@@ -34,12 +34,11 @@ def setup():
     cursor.execute("""
 CREATE TABLE IF NOT EXISTS message (
     id CHAR(32) NOT NULL,
+    userid CHAR(32) NOT NULL,
     message VARCHAR(1000) NOT NULL,
     created_at INT NOT NULL,
-    userid CHAR(32) NOT NULL,
     FOREIGN KEY(userid) REFERENCES user(id) ON DELETE CASCADE,
-    FOREIGN KEY(id) REFERENCES room(id) ON DELETE CASCADE,
-    PRIMARY KEY(id)
+    FOREIGN KEY(id) REFERENCES room(id) ON DELETE CASCADE
 )
     """)
     
