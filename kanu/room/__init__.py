@@ -103,9 +103,8 @@ def get_room_by_id(
 ):
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    cursor.execute("""
-    SELECT (id,userM,userF,created_at,detail_loc_agree_M,detail_loc_agree_F) FROM room WHERE id = %s
-    """,(id))
+    query = "SELECT id, userM, userF, created_at, detail_loc_agree_M, detail_loc_agree_F FROM room WHERE id = %s"
+    cursor.execute(query,(id,))
     oneroom = cursor.fetchone()
     room = Room()
     room.id = oneroom[0]
