@@ -3,7 +3,7 @@ version: '3'
 services:
   proxy:
     image: nginx:latest
-    container_name: skyst_proxy.skyst.com
+    container_name: skyst_proxy
     depends_on:
       - server
       - socket
@@ -14,7 +14,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: skyst_db.skyst.com
+    container_name: skyst_db
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?err}
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
@@ -23,19 +23,19 @@ services:
 
   server:
     build: .
-    container_name: skyst_server.skyst.com
+    container_name: skyst_server
     depends_on:
       - db
     environment:
     - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
     - MYSQL_USER=${MYSQL_USER:?err}
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
-    - MYSQL_HOST=skyst_db.skyst.com
+    - MYSQL_HOST=skyst_db
     command: ["python3", "app.py"]
   
   socket:
     build: .
-    container_name: skyst_socket.skyst.com
+    container_name: skyst_socket
     depends_on:
       - db
       - server
@@ -43,5 +43,5 @@ services:
     - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
     - MYSQL_USER=${MYSQL_USER:?err}
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
-    - MYSQL_HOST=skyst_db.skyst.com
+    - MYSQL_HOST=skyst_db
     command: ["python3", "app_message.py"]
