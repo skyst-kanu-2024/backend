@@ -5,6 +5,7 @@ import kanu
 import kanu.auth
 import kanu.user
 import kanu.hobby
+import kanu.location
 
 
 app = Flask(__name__)
@@ -32,7 +33,7 @@ def login():
     session = kanu.auth.login(email, password)
     if session is None:
         return {"message": "invalid email or password"}, 401
-    return {"session": session}
+    return {"session_id": session}
 
 @app.route("/api/signup", methods=["POST"])
 def signup():
@@ -121,3 +122,30 @@ def get_user_hobby():
     hobbies = kanu.hobby.get_user_hobby(user)
     return {"hobbies": hobbies}, 200
 
+@app.route("/api/userhobby/<hobbyName:hobbyName>", methods=["DELETE"])
+def delete_user_hobby(hobbyName):
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    session = request.headers.get("session")
+    user = kanu.auth.get_user_by_session(session)
+    kanu.hobby.delete_user_hobby(user, hobbyName)
+
+@app.route('/nearUsersLocation', methods=['GET'])
+def nearby_users():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    session = request.headers.get("session")
+    user = kanu.auth.get_user_by_session(session)
+
+    # user_id와 max_distance를 검증하는 간단한 로직
+    if not user.id is None:
+        return {"message": "missing required field 'user id'"}, 400
+
+    # 실제 환경에서는 user_id로 User 객체를 찾는 로직이 필요함
+    try:
+        near_users = kanu.location.get_near_user_distance(user)
+        return {"near users": near_users}, 200
+    except Exception as e:
+        return {'error': str(e)}, 500

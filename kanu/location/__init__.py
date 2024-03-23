@@ -14,10 +14,12 @@ class UserDeviceToken:
     roomid: Room.id
     devicetoken: str
 
-# Haversine 공식을 사용하여 두 지점 사이의 거리를 계산하는 함수
+from math import radians, cos, sin, sqrt, atan2
+
+# Haversine 공식을 사용하여 두 지점 사이의 거리를 계산하는 함수 (결과 단위: 미터)
 def calculate_distance(lat1, lng1, lat2, lng2):
-    # 지구 반지름 (킬로미터 단위)
-    R = 6371.0
+    # 지구 반지름 (미터 단위)
+    R = 6371.0 * 1000  # 킬로미터를 미터로 변환
 
     # 위도와 경도를 라디안 단위로 변환
     lat1, lng1, lat2, lng2 = map(radians, [lat1, lng1, lat2, lng2])
@@ -30,8 +32,9 @@ def calculate_distance(lat1, lng1, lat2, lng2):
     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlng / 2)**2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    distance = R * c
+    distance = R * c  # 계산된 거리 (미터 단위)
     return distance
+
 
 def setup():
     conn= kanu.database.Database()
@@ -83,11 +86,10 @@ def get_all_user_location(
     
 def get_near_user_distance(
         user: User,
-        max_distance: float
     ):
     mylocation = get_user_location(user.id)
     alluserlocation = get_all_user_location()
-
+    max_distance=1000
     near_users = []
     for location in alluserlocation:
         # 현재 사용자일 경우 건너뛰기
