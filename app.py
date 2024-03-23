@@ -93,7 +93,7 @@ def update_user():
 def get_user_by_id():
     if not is_session_valid(request.headers):
         print(request.headers)
-        return {"message": f"invalid session {request.headers.get('session_id')} / {kanu.auth.is_session_valid(request.headers.get('session_id'))}"}, 401
+        return {"message": f"invalid session {request.headers} / {kanu.auth.is_session_valid(request.headers.get('session_id'))}"}, 401
     
     if "id" not in request.args:
         return {"message": "missing required fields 'id'"}, 400
