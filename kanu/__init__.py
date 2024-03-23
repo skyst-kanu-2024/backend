@@ -5,3 +5,11 @@ class gender(enum.IntEnum):
     M = 1
     FEMALE = 2
     F = 2
+
+import kanu.database
+import kanu.user
+import kanu.auth
+import kanu.hobby
+import kanu.room
+import kanu.message
+import kanu.location
