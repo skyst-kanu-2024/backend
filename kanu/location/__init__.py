@@ -142,19 +142,20 @@ def update_all_user_location( # 안 씀 절대로
     
 
 def update_user_location(
-    userid: str,
+    user: kanu.user.User,
     lat: float,
     lng: float
 )->UserLocation:
     conn= kanu.database.Database()
     cursor = conn.cursor()
+    if get_user_location(user) is None:
+        create_user_location(user, lat, lng)
     cursor.execute(
         """UPDATE user_location
             SET lat=%s, lng=%s
             WHERE user_id=%s
-        """, (lat, lng, userid)
+        """, (lat, lng, user.id)
     )
-    pass
 
 def delete_user_hobby( #user가 본인 hobby 삭제 할 때
     user: User
