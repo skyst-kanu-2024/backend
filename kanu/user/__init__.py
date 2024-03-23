@@ -4,6 +4,7 @@ import kanu.auth
 
 import hashlib
 import time
+import json
 
 class User:
     id: str
@@ -38,6 +39,28 @@ class User:
             self.age != user.age or
             self.nickname != user.nickname
         )
+    
+    def change(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if key in self.__dict__:
+                setattr(self, key, value)
+            else:
+                raise ValueError(f"Invalid key: {key}")
+            
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "gender": "M" if self.gender == kanu.gender.M else "F",
+            "age": self.age,
+            "nickname": self.nickname,
+            "loc_agree": self.loc_agree,
+        }
+    
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False)
 
 
 def setup():
@@ -91,10 +114,14 @@ def create_user(
 def get_user(
     userid: str = None,
     email: str = None,
+    session: str = None,
 ) -> User:
     conn = kanu.database.Database()
     cursor = conn.cursor()
     basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
+    if session:
+        userid = kanu.auth.get_userid_by_session(session)
+
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))

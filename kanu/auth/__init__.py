@@ -61,3 +61,11 @@ def login(email: str, password: str) -> str | None:
     conn.close()
     return session
 
+def get_userid_by_session(session: str) -> str:
+    conn = kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM user_session WHERE session = %s", (session,))
+    result = cursor.fetchone()
+    if result is None:
+        return None
+    return result[0]
