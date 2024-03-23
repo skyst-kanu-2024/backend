@@ -2,6 +2,7 @@ import kanu
 import kanu.database
 from kanu.user import User
 from kanu.room import Room
+from math import radians, cos, sin, sqrt, atan2
 
 class UserLocation:
     userid: User.id
@@ -12,6 +13,25 @@ class UserDeviceToken:
     userid: User.id
     roomid: Room.id
     devicetoken: str
+
+# Haversine 공식을 사용하여 두 지점 사이의 거리를 계산하는 함수
+def calculate_distance(lat1, lng1, lat2, lng2):
+    # 지구 반지름 (킬로미터 단위)
+    R = 6371.0
+
+    # 위도와 경도를 라디안 단위로 변환
+    lat1, lng1, lat2, lng2 = map(radians, [lat1, lng1, lat2, lng2])
+
+    # 두 지점의 위도와 경도 차이
+    dlat = lat2 - lat1
+    dlng = lng2 - lng1
+
+    # Haversine 공식
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlng / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance
 
 def setup():
     conn= kanu.database.Database()
@@ -47,6 +67,35 @@ def create_user_location(
         "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (userid), (lat), (lng)
     )
     pass
+
+def get_all_user_location(    
+)->list[User]:
+    conn= kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute(
+        """SELECT * FROM user_location 
+            RIGHT JOIN user ON user.loc_agree = TRUE;
+        """
+    )
+    data: list[tuple[str, float, float]] = cursor.fetchall()
+    ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng, in data]
+    return ndata
+    
+def get_near_user_distance(user, max_distance):
+    mylocation = get_user_location(user.id)
+    alluserlocation = get_all_user_location()
+
+    near_users = []
+    for location in alluserlocation:
+        # 현재 사용자일 경우 건너뛰기
+        if location.userid == user.id:
+            continue
+
+        distance = calculate_distance(mylocation.lat, mylocation.lng, location.lat, location.lng)
+        if distance <= max_distance:
+            near_users.append((location.userid, distance))
+    return near_users
+    
 
 def get_user_location(
     userid: User.id
