@@ -1,6 +1,7 @@
 import kanu
 
 class User:
+    id: str
     name: str
     email: str
     gender: kanu.gender
