@@ -76,7 +76,7 @@ def login(token: str) -> str | None:
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), kanu.config.google_client_id)
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
-        print(idinfo)
+        raise ValueError(idinfo)
         userid = idinfo['sub']
         email = idinfo['email']
         name = idinfo['name']
