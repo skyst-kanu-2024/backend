@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS user (
     conn.close()
     
 
-def create_user(
+'''def create_user(
     name: str,
     email: str,
     gender: kanu.gender,
@@ -104,7 +104,6 @@ def create_user(
     nickname: str = None,
     loc_agree: bool = False,
 ) -> User:
-    import kanu.database
     conn = kanu.database.Database()
     cursor = conn.cursor()
     
@@ -116,11 +115,10 @@ def create_user(
     userid = hashlib.md5(f"{name}{email}{time.time()}".encode()).hexdigest()
     query = "INSERT INTO user (id, name, email, gender, age, nickname, loc_agree) VALUES (%s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (userid, name, email, gender, age, nickname, loc_agree))
-    import kanu.auth
     kanu.auth.create_user(userid, password)
     conn.commit()
     conn.close()
-    return User(userid, name, email, gender, age, nickname)
+    return User(userid, name, email, gender, age, nickname)'''
 
 
 def get_user(
