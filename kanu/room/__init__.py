@@ -67,13 +67,13 @@ def get_room(
     if user.gender == kanu.gender.M:
         cursor.execute("""
         SELECT (id,userM,userF,created_at) FROM room WHERE userM = %s
-        """,(user.id))
+        """,user.id)
         roomlist = cursor.fetchall()
 
     elif user.gender == kanu.gender.F:
         cursor.execute("""
         SELECT (id,userM,userF,created_at) FROM room WHERE userF = %s
-        """,(user.id))
+        """,user.id)
         roomlist = cursor.fetchall()
     else:
         raise ValueError("User is not Male/Female")
@@ -96,11 +96,11 @@ def update_allow_user_loc(
     cursor = conn.cursor()
     if user.gender == kanu.gender.M:
         cursor.execute("""
-        UPDATE room SET detail_loc_agreeM = %s WHERE id = %s and userM = %s
+        UPDATE room SET detail_loc_agree_M = %s WHERE id = %s and userM = %s
         """,(agree,id,user.id))
     elif user.gender == kanu.gender.F:
         cursor.execute("""
-        UPDATE room SET detail_loc_agreeF = %s WHERE id = %s and userF = %s
+        UPDATE room SET detail_loc_agree_F = %s WHERE id = %s and userF = %s
         """, (agree, id, user.id))
     else:
         raise ValueError("User is not Male/Female")
