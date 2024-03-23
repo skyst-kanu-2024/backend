@@ -92,6 +92,7 @@ def update_user():
 @app.route("/api/user", methods=["GET"])
 def get_user_by_id():
     if not is_session_valid(request.headers):
+        print(request.headers)
         return {"message": "invalid session"}, 401
     
     if "id" not in request.args:
