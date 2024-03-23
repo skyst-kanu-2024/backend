@@ -59,6 +59,7 @@ class User:
             "age": self.age,
             "nickname": self.nickname,
             "loc_agree": self.loc_agree,
+            "picture_url": self.picture,
         }
     
     def to_json(self) -> str:
