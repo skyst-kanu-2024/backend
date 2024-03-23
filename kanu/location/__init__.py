@@ -37,11 +37,11 @@ def calculate_distance(lat1, lng1, lat2, lng2):
 
 
 def setup():
-    conn= kanu.database.Database()
+    conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS user_location(
-            user_id VARCHAR(32) NOT NULL PRIMARY KEY,
+            user_id CHAR(32) NOT NULL PRIMARY KEY,
             lat DOUBLE,
             lng DOUBLE,
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
@@ -50,8 +50,8 @@ def setup():
     )
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS user_device_token(
-            user_id VARCHAR(32) NOT NULL PRIMARY KEY,
-            room_id VARCHAR(32),
+            user_id CHAR(32) NOT NULL PRIMARY KEY,
+            room_id CHAR(32),
             devicetoken VARCHAR(64),
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,
             FOREIGN KEY(room_id) REFERENCES room(id) ON DELETE CASCADE
