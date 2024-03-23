@@ -10,6 +10,8 @@ class Room:
     userM : str
     userF : str
     created_at : int
+    detail_loc_agree_M : bool
+    detail_loc_agree_F: bool
 def setup():
     conn = kanu.database.Database()
     cursor = conn.cursor()
@@ -36,7 +38,7 @@ def create_room(
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("""
-    SELECT (id, userM,userF, created_at) from room WHERE userM = %s and userF = %s
+    SELECT (id, userM,userF, created_at,detail_loc_agree_M,detail_loc_agree_F) from room WHERE userM = %s and userF = %s
     """,(userM,userF))
     exist = cursor.fetchone()
     if exist:
@@ -45,6 +47,8 @@ def create_room(
         room.userM = exist[1]
         room.userF = exist[2]
         room.created_at = exist[3]
+        room.detail_loc_agree_M = exist[4]
+        room.detail_loc_agree_M = exist[5]
         return room
     id = uuid4().hex
     created_at = int(time.time())
@@ -57,9 +61,11 @@ def create_room(
     room.userM = userM
     room.userF = userF
     room.created_at = created_at
+    room.detail_loc_agree_M = False
+    room.detail_loc_agree_F = False
     return room
     
-def get_room(
+def get_room_by_user(
     user: kanu.user.User
 ) -> list[Room]:
     conn = kanu.database.Database()
@@ -72,7 +78,7 @@ def get_room(
 
     elif user.gender == kanu.gender.F:
         cursor.execute("""
-        SELECT (id,userM,userF,created_at) FROM room WHERE userF = %s
+        SELECT (id,userM,userF,created_at,detail_loc_agree_M,detail_loc_agree_F) FROM room WHERE userF = %s
         """,user.id)
         roomlist = cursor.fetchall()
     else:
@@ -84,8 +90,28 @@ def get_room(
         room.userM = oneroom[1]
         room.userF = oneroom[2]
         room.created_at = oneroom[3]
+        room.detail_loc_agree_M = oneroom[4]
+        room.detail_loc_agree_F = oneroom[5]
         data.append(room)
     return data
+
+def get_room_by_id(
+    id : str
+):
+    conn = kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT (id,userM,userF,created_at,detail_loc_agree_M,detail_loc_agree_F) FROM room WHERE id = %s
+    """,(id))
+    oneroom = cursor.fetchone()
+    room = Room()
+    room.id = oneroom[0]
+    room.userM = oneroom[1]
+    room.userF = oneroom[2]
+    room.created_at = oneroom[3]
+    room.detail_loc_agree_M = oneroom[4]
+    room.detail_loc_agree_F = oneroom[5]
+    return room
 
 def update_allow_user_loc(
     user:kanu.user.User,
@@ -104,3 +130,15 @@ def update_allow_user_loc(
         """, (agree, id, user.id))
     else:
         raise ValueError("User is not Male/Female")
+
+def is_user_in_room(
+    user : kanu.user.User,
+    id : str
+):
+    room = get_room_by_id(id)
+    if user.gender == kanu.gender.M and room.userM == user.id:
+        return True
+    elif user.gender == kanu.gender.F and room.userF == user.id:
+        return True
+    else:
+        return False

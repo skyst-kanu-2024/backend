@@ -29,13 +29,16 @@ def create_profile(
     cursor = conn.cursor()
     cursor.execute("""
     SELECT (id,mbti,introduce) FROM profile WHERE id = %s
-    """,(user.id))
+    """,user.id)
     exist = cursor.fetchone()
     if exist:
+        cursor.execute("""
+        UPDATE profile SET mbti = %s, introduce = %s WHERE id = %s
+        """,(mbti,introduce,user.id))
         profile = Profile()
-        profile.id = exist[0]
-        profile.mbti = exist[1]
-        profile.introduce = exist[2]
+        profile.id = user.id
+        profile.mbti = mbti
+        profile.introduce = introduce
         return profile
     cursor.execute("""
     INSERT INTO profile(id,mbti,introduce) VALUES (%s,%s,%s)
