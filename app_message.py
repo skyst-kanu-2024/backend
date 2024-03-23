@@ -17,10 +17,8 @@ def arg_check(required_fields: list[str], args: dict) -> bool:
 @socketio.on('connect')
 def handle_connect(data):
     print('Client connected')
-    session_id = data.get('session_id')
     #if not kanu.auth.is_session_valid(session_id):
     #    return jsonify({'status': 401, 'message': 'UnAuthorized'})
-    print(session_id)
 
 
 
