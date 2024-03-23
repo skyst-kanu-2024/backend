@@ -103,6 +103,8 @@ def get_user_by_session(session: str) -> kanu.user.User | None:
     if result is None:
         conn.close()
         return None
+    if result.startswith("'"):
+        result = result[1:-1]
     user = kanu.user.get_user(userid=result, cursor=cursor)
     conn.close()
     return user
