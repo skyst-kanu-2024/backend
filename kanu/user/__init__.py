@@ -120,9 +120,9 @@ CREATE TABLE IF NOT EXISTS user (
     conn.close()
     return User(userid, name, email, gender, age, nickname)'''
 
-def get_as_session(session):
+def get_as_session(session: str) -> User:
     import kanu.auth
-    return kanu.auth.get_user_by_session(session).id
+    return kanu.auth.get_user_by_session(session)
 
 
 def get_user(
@@ -136,10 +136,8 @@ def get_user(
         cursor = conn.cursor()
     query = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
-        userid = str(get_as_session(session))
-        raise ValueError(userid)
-        if userid.startswith("'"):
-            userid = userid[1:-1]
+        user = get_as_session(session)
+        return User(*user)
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))
