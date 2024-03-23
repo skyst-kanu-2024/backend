@@ -87,7 +87,7 @@ def get_all_user_location(
 def get_near_user_distance(
         user: User,
     ):
-    mylocation = get_user_location(user.id)
+    mylocation = get_user_location(user)
     alluserlocation = get_all_user_location()
     max_distance=1000
     near_users = []
