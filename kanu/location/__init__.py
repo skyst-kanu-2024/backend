@@ -112,8 +112,7 @@ def get_user_location(
             WHERE user_id=%s
         """, (user.id)
     )
-    data: list[tuple[str, float, float]] = cursor.fetchall()
-    raise ValueError(data)
+    data = cursor.fetchall()
     ndata = [UserLocation(user=kanu.user.get_user(userid=user_id), lat=lat, lng=lng) for user_id, lat, lng in data]
     return ndata
 
