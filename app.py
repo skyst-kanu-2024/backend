@@ -170,7 +170,7 @@ def update_user_location():
     user = kanu.auth.get_user_by_session(session)
     
     required_fields = ["lat", "lng"]
-    if not arg_check(required_fields, request.headers):
+    if not arg_check(required_fields, request.json):
         return {"message": "missing required fields"}, 400
     
     kanu.location.update_user_location(user, request.json["lat"], request.json["lng"])
