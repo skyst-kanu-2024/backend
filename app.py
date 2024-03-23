@@ -97,6 +97,8 @@ def get_user_by_id():
         return {"message": "missing required fields 'id'"}, 400
     
     user = kanu.user.get_user(id=request.args.get("id"))
+    if user is None:
+        return {"message": "user not found"}, 204
     return user.with_profile(), 200
 
 
