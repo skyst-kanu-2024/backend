@@ -103,6 +103,6 @@ def get_user_by_session(session: str) -> kanu.user.User | None:
     if result is None:
         conn.close()
         return None
-    user = kanu.user.get_user(userid=result['id'], cursor=cursor)
+    user = kanu.user.get_user(userid=result['id'])
     conn.close()
     return user
