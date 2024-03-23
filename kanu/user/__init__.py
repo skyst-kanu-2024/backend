@@ -137,6 +137,8 @@ def get_user(
     basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
         userid = get_as_session(session)
+        if userid.startswith("'"):
+            userid = userid[1:-1]
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))
