@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS user_session (
     id CHAR(32) NOT NULL,
     session CHAR(32) NOT NULL,
     PRIMARY KEY(session),
-    UNIQUE(session),
+    UNIQUE(session)
 );
     """)
     conn.commit()

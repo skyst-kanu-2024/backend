@@ -78,8 +78,7 @@ CREATE TABLE IF NOT EXISTS user (
     UNIQUE(id, email)
 );
     """)
-    # index for email
-    cursor.execute("CREATE INDEX IF NOT EXISTS idx_user_email ON user(email)")
+    #cursor.execute("CREATE INDEX IF NOT EXISTS idx_user_email ON user(email)")
     conn.commit()
     conn.close()
     
