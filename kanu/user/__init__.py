@@ -129,14 +129,13 @@ def get_user(
     userid: str = None,
     email: str = None,
     session: str = None,
-    cursor = None,
 ) -> User:
-    if not cursor:
-        conn = kanu.database.Database()
-        cursor = conn.cursor()
+    conn = kanu.database.Database()
+    cursor = conn.cursor()
     query = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
         user = get_as_session(session)
+        conn.close()
         return User(*user)
     if userid:
         query += " WHERE id = %s"
