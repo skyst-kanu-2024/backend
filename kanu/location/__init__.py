@@ -113,8 +113,7 @@ def get_user_location(
         """, (user.id)
     )
     data = cursor.fetchall()
-    ndata = [UserLocation(user=kanu.user.get_user(userid=user_id), lat=lat, lng=lng) for user_id, lat, lng in data]
-    return ndata
+    return UserLocation(user=user, lat=data["lat"], lng=data["lng"])
 
 def update_all_user_location( # 안 씀 절대로
     alluser:list[UserLocation]
