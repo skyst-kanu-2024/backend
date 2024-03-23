@@ -67,7 +67,7 @@ def create_user_location(
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (user.id), (lat), (lng)
+        "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (user.id, lat, lng)
     )
     pass
 
@@ -127,7 +127,7 @@ def update_user_location(
         """UPDATE user_location
             SET lat=%s, lng=%s
             WHERE user_id=%s
-        """, (lat), (lng), (user.id)
+        """, (lat, lng, user.id)
     )
     pass
 
@@ -175,7 +175,7 @@ def get_user_device_token(
 
 def update_user_device_token(
     user: User,
-    roomid: Room.id,
+    room: Room,
     devicetoken: str
 )->UserDeviceToken:
     conn= kanu.database.Database()
@@ -184,7 +184,7 @@ def update_user_device_token(
         """UPDATE user_device_token
             SET roomid=%s, lng=%s
             WHERE user_id=%s
-        """, (roomid), (devicetoken), (user.id)
+        """, (room.id, devicetoken, user.id)
     )
     pass
 
