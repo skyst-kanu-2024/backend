@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: mysql:8.0
-    container_name: db
+    container_name: skyst_db
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?err}
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
   server:
     build: .
-    container_name: server
+    container_name: skyst_server
     depends_on:
       - db
     ports:
