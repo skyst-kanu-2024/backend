@@ -70,10 +70,7 @@ def get_message(
     msglist = cursor.fetchall()
     data = []
     for onemsg in msglist:
-        msg = Message()
-        msg.message = onemsg[1]
-        msg.created_at = onemsg[2]
-        msg.userid = onemsg[3]
+        msg = Message(**onemsg)
         data.append(msg)
     return data
 
