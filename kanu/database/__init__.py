@@ -9,7 +9,7 @@ class Database:
         password = kanu.config.password
         db = kanu.config.db
         
-        self.connection = pymysql.connect(host=host,
+        self.connection = pymysql.connect(
             host=host,
             user=user,
             password=password,
