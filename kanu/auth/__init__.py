@@ -11,7 +11,7 @@ from google.auth.transport import requests
 def setup():
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    cursor.execute("""
+    '''cursor.execute("""
 CREATE TABLE IF NOT EXISTS user_pass (
     id CHAR(32) NOT NULL,
     password VARCHAR(64) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS user_pass (
     PRIMARY KEY(id)
     
 );
-    """)
+    """)'''
     cursor.execute("""
 CREATE TABLE IF NOT EXISTS user_session (
     id CHAR(32) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS user_session (
     conn.commit()
     conn.close()
 
-
+'''
 def create_user(
     id: int,
     password: str
@@ -43,7 +43,7 @@ def create_user(
     password = hashlib.sha256(password.encode()).hexdigest()
     cursor.execute(query, (id, password))
     conn.commit()
-    conn.close()
+    conn.close()'''
 
 def is_session_valid(session: str) -> bool:
     conn = kanu.database.Database()
@@ -76,6 +76,7 @@ def login(token: str) -> str | None:
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), kanu.config.google_client_id)
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
+        print(idinfo)
         userid = idinfo['sub']
         email = idinfo['email']
         name = idinfo['name']

@@ -26,7 +26,7 @@ def is_session_valid(headers: dict) -> bool:
 
 # AUTH API ENDPOINTS
 
-@app.route("/api/login", methods=["POST"])
+#@app.route("/api/login", methods=["POST"])
 def login():
     reuqired_fields = ["email", "password"]
     if not arg_check(reuqired_fields, request.json):
@@ -38,7 +38,7 @@ def login():
         return {"message": "invalid email or password"}, 401
     return {"session_id": session}
 
-@app.route("/api/signup", methods=["POST"])
+#@app.route("/api/signup", methods=["POST"])
 def signup():
     required_fields = ["name", "email", "gender", "age", "nickname", "password"]
     if not arg_check(required_fields, request.json):

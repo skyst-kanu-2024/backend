@@ -2,6 +2,7 @@ import enum
 import os
 
 class gender(enum.IntEnum):
+    Null = 0
     MALE = 1
     M = 1
     FEMALE = 2
@@ -22,7 +23,6 @@ class Config:
     database: str
     google_client_id: str
     google_client_secret: str
-    google_redirect_uri: str
 
     def __init__(self):
         self.host = os.getenv("MYSQL_HOST")
@@ -31,13 +31,10 @@ class Config:
         self.database = os.getenv("MYSQL_DATABASE")
         self.google_client_id = os.getenv("GOOGLE_CLIENT_ID")
         self.google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
-        self.google_redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
-
 
 
 def setup():
     kanu.config = Config()
-
     kanu.database.setup()
     kanu.user.setup()
     kanu.auth.setup()
