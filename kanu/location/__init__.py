@@ -116,8 +116,22 @@ def get_user_location(
     ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng, in data]
     return ndata
 
+def update_all_user_location( # 안 씀 절대로
+    alluser:list[UserLocation]
+)->UserLocation:
+    conn= kanu.database.Database()
+    cursor = conn.cursor()
+    for user in alluser:
+        cursor.execute(
+            """UPDATE user_location
+                SET lat=%s, lng=%s
+                WHERE user_id=%s
+            """, (user.lat, user.lng, user.user.id)
+        )
+    
+
 def update_user_location(
-    user: User,
+    userid: str,
     lat: float,
     lng: float
 )->UserLocation:
@@ -127,7 +141,7 @@ def update_user_location(
         """UPDATE user_location
             SET lat=%s, lng=%s
             WHERE user_id=%s
-        """, (lat, lng, user.id)
+        """, (lat, lng, userid)
     )
     pass
 

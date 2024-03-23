@@ -144,8 +144,8 @@ def delete_user_hobby(hobbyName):
     user = kanu.auth.get_user_by_session(session)
     kanu.hobby.delete_user_hobby(user, hobbyName)
 
-@app.route('/nearUsersLocation', methods=['GET'])
-def nearby_users():
+@app.route('/api/nearLocations', methods=['GET']) #해당 유저가 다른 사람 location을 보는 로직
+def get_nearby_users():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
@@ -160,6 +160,29 @@ def nearby_users():
     try:
         near_users = kanu.location.get_near_user_distance(user)
         return {"near users": near_users}, 200
+    except Exception as e:
+        return {'error': str(e)}, 500
+    
+@app.route('/api/nearLocations', methods=['POST']) #유저 본인의 location update하는 로직
+def update_user_location():
+    if not is_session_valid(request. headers):
+        return {"message": "invalid session"}, 401
+    
+    session = request.headers.get("session")
+    user = kanu.auth.get_user_by_session(session)
+    
+    required_fields = ["lat", "lng"]
+    if not arg_check(required_fields, request.json):
+        return {"message": "missing required fields"}, 400
+
+    # user_id와 max_distance를 검증하는 간단한 로직
+    if not user.id is None:
+        return {"message": "missing required field 'user id'"}, 400
+
+    # 실제 환경에서는 user_id로 User 객체를 찾는 로직이 필요함
+    try:
+        kanu.location.update_user_location(user)
+        return {"message": "update user location success"}, 200
     except Exception as e:
         return {'error': str(e)}, 500
 
