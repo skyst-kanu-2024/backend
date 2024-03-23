@@ -6,7 +6,7 @@ import time
 import json
 
 class User:
-    id: int
+    id: str
     name: str
     email: str
     gender: kanu.gender
@@ -16,7 +16,7 @@ class User:
     
     def __init__(
         self,
-        id: int,
+        id: str,
         name: str,
         email: str,
         gender: kanu.gender,

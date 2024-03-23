@@ -19,8 +19,8 @@ def setup():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS room(
     id char(32) NOT NULL,
-    userM INT NOT NULL,
-    userF INT NOT NULL,
+    userM char(32) NOT NULL,
+    userF char(32) NOT NULL,
     created_at int NOT NULL,
     detail_loc_agree_M boolean DEFAULT FALSE,
     detail_loc_agree_F boolean DEFAULT FALSE,

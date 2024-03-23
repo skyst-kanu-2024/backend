@@ -15,7 +15,7 @@ def setup():
     cursor = conn.cursor()
     cursor.execute("""
 CREATE TABLE IF NOT EXISTS message (
-    id INT NOT NULL,
+    id CHAR(32) NOT NULL,
     message VARCHAR(1000) NOT NULL,
     created_at INT NOT NULL,
     userid CHAR(32) NOT NULL,
