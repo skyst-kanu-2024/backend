@@ -251,12 +251,12 @@ def get_message():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    required_fields = ["room_id"]
+    required_fields = ["roomid"]
     if not arg_check(required_fields, request.args):
         return {"message": "missing required fields"}, 400
     
     user = kanu.user.get_user(session=request.headers.get("sessionid"))
-    room = kanu.room.get_room_by_id(request.args["room_id"])
+    room = kanu.room.get_room_by_id(request.args["roomid"])
     if room is None:
         return {"message": "room not found"}, 404
     if not (room.userM == user or room.userF == user):
