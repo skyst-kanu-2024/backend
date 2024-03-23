@@ -104,6 +104,7 @@ def create_user(
     nickname: str = None,
     loc_agree: bool = False,
 ) -> User:
+    import kanu.database
     conn = kanu.database.Database()
     cursor = conn.cursor()
     
