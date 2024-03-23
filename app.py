@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
+import json
 
 import kanu
 import kanu.auth
@@ -8,6 +9,7 @@ import kanu.hobby
 import kanu.room
 import kanu.location
 import kanu.message
+
 
 
 app = Flask(__name__)
@@ -263,7 +265,8 @@ def get_message():
         return {"message": "user not in room"}, 403
     
     messages = kanu.message.get_message(room.id)
-    return {"messages": [message.to_dict() for message in messages]}, 200
+    rtn = {"messages": [message.to_dict() for message in messages]}
+    return json.dumps(rtn, ensure_ascii=False), 200
 
 if __name__ == "__main__":
     kanu.setup()
