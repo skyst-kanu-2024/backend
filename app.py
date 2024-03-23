@@ -118,5 +118,6 @@ def get_user_hobby():
         return {"message": "invalid session"}, 401
     
     user = kanu.user.get_user(session=request.headers.get("session"))
-    hobbies = kanu.hobby.get_user_hobby(user.id)
+    hobbies = kanu.hobby.get_user_hobby(user)
     return {"hobbies": hobbies}, 200
+

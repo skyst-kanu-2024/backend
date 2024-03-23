@@ -115,9 +115,11 @@ def get_user(
     userid: str = None,
     email: str = None,
     session: str = None,
+    cursor = None,
 ) -> User:
-    conn = kanu.database.Database()
-    cursor = conn.cursor()
+    if not cursor:
+        conn = kanu.database.Database()
+        cursor = conn.cursor()
     basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
         userid = kanu.auth.get_userid_by_session(session)
