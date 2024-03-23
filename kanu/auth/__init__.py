@@ -85,7 +85,7 @@ def login(token: str) -> str | None:
         cursor.execute("SELECT id, name, email, picture FROM user WHERE email = %s", (email,))
         result = cursor.fetchone()
         if result is None:
-            cursor.execute("INSERT INTO user (id, name, email, picture, nickname) VALUES (%s, %s, %s)", (userid, name, email, pictureurl, name))
+            cursor.execute("INSERT INTO user (id, name, email, picture, nickname) VALUES (%s, %s, %s, %s)", (userid, name, email, pictureurl, name))
             conn.commit()
         else:
             if result['name'] != name:
