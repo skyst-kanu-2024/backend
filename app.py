@@ -158,7 +158,7 @@ def get_nearby_users():
 
     # 실제 환경에서는 user_id로 User 객체를 찾는 로직이 필요함
     near_users = kanu.location.get_near_user_distance(user)
-    return {"near users": near_users}, 200
+    return {"users": near_users}, 200
     
 @app.route('/api/nearLocations', methods=['POST']) #유저 본인의 location update하는 로직
 def update_user_location():

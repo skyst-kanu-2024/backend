@@ -110,7 +110,7 @@ def get_near_user_distance(
 
         distance = calculate_distance(mylocation.lat, mylocation.lng, location.lat, location.lng)
         if distance <= max_distance:
-            near_users.append((location.user.id, distance))
+            near_users.append({"userid":location.user.id, "distance":distance})
     return near_users
     
 
