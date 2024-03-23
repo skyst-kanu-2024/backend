@@ -240,7 +240,7 @@ def send_message():
     room = kanu.room.get_room_by_id(request.json["room_id"])
     if room is None:
         return {"message": "room not found"}, 404
-    if user not in room.users:
+    if not (room.userM == user.id or room.userF == user.id):
         return {"message": "user not in room"}, 403
     
     kanu.message.create_message(room.id, request.json["message"], user.id)
@@ -278,6 +278,15 @@ def set_device_token():
     user = kanu.user.get_user(session=request.headers.get("sessionid"))
     kanu.user.set_device_token(user, request.json["token"])
     return {"message": "success"}, 200
+
+@app.route("/api/dtoken", methods=["GET"])
+def get_device_token():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
+    token = kanu.user.get_device_token(user)
+    return {"token": token}, 200
 
 if __name__ == "__main__":
     kanu.setup()
