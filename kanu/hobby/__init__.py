@@ -88,12 +88,12 @@ def get_user_hobby( #userHobby 가져올 때
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        """SELECT * FROM hobby_match
+        """SELECT  hobby_name FROM hobby_match
             WHERE user_id=%s
         """, (userid)
     )
     data: list[tuple[int, str]] = cursor.fetchall()
-    ndata = [HobbyMatch(userid=user_id, hobbyname=hobby_name) for user_id, hobby_name in data]
+    ndata = [HobbyMatch(userid=userid, hobbyname=hobby_name) for hobby_name, in data]
     return ndata
 
 def create_user_hobby( #userhobby 추가
