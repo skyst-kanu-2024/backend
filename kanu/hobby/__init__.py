@@ -14,7 +14,7 @@ def setup(): # TABLE setup
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `hobby_name` (
+        """CREATE TABLE IF NOT EXISTS hobby_name (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(20) NOT NULL UNIQUE
 );
@@ -22,7 +22,7 @@ def setup(): # TABLE setup
         """
     )
     cursor.execute(
-        """CREATE TABLE IF NOT EXISTS 'hobby_match'(
+        """CREATE TABLE IF NOT EXISTS hobby_match(
             user_id VARCHAR(32) NOT NULL,
             hobby_name VARCHAR(20)
             
