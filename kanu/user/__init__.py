@@ -136,7 +136,8 @@ def get_user(
         cursor = conn.cursor()
     query = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
-        userid = get_as_session(session)
+        userid = str(get_as_session(session))
+        raise ValueError(userid)
         if userid.startswith("'"):
             userid = userid[1:-1]
     if userid:
