@@ -174,6 +174,7 @@ def update_user_location():
         return {"message": "missing required fields"}, 400
     
     kanu.location.update_user_location(user, request.json["lat"], request.json["lng"])
+    return {"message": "success"}, 200
 
 # ROOM API ENDPOINTS
     
