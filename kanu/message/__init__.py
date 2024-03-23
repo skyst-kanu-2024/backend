@@ -70,6 +70,7 @@ def get_message(
     msglist = cursor.fetchall()
     data = []
     for onemsg in msglist:
+        onemsg.pop('id')
         msg = Message(**onemsg)
         data.append(msg)
     return data
