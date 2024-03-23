@@ -82,11 +82,16 @@ def login(token: str) -> str | None:
         pictureurl = idinfo['picture']
         conn = kanu.database.Database()
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM user WHERE email = %s", (email,))
+        cursor.execute("SELECT id, name, email, picture FROM user WHERE email = %s", (email,))
         result = cursor.fetchone()
         if result is None:
             cursor.execute("INSERT INTO user (id, name, email, picture, nickname) VALUES (%s, %s, %s)", (userid, name, email, pictureurl, name))
             conn.commit()
+        else:
+            if result['name'] != name:
+                cursor.execute("UPDATE user SET name = %s WHERE id = %s", (name, result['id']))
+            if result['picture'] != pictureurl:
+                cursor.execute("UPDATE user SET picture = %s WHERE id = %s", (pictureurl, result['id']))
         session = hashlib.md5(f"{userid}{time.time()}".encode()).hexdigest()
         cursor.execute("INSERT INTO user_session (id, session) VALUES (%s, %s)", (userid, session))
         conn.commit()
