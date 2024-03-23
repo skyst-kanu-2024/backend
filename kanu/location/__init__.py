@@ -99,7 +99,7 @@ def create_user_location(
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (user.id, lat, lng)
+        "INSERT INTO user_location (user_id, lat, long) VALUES (%s, %f, %f)", (user.id, lat, lng)
     )
     pass
 
@@ -173,6 +173,7 @@ def update_user_location(
     cursor = conn.cursor()
     if get_user_location(user) is None:
         create_user_location(user, lat, lng)
+        return
     cursor.execute(
         """UPDATE user_location
             SET lat=%s, lng=%s
