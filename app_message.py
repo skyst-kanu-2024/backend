@@ -38,7 +38,6 @@ def handle_join(data):
     
 @socketio.on('message')
 def handle_message(data):
-    print(data)
     room_id = data.get('room_id')
     message_content = data.get('message')
     userid = data.get('userid')

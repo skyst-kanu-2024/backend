@@ -22,7 +22,6 @@ def arg_check(required_fields: list[str], args: dict) -> bool:
     
 
 def is_session_valid(headers: dict) -> bool:
-    print(headers)
     if "sessionid" not in headers:
         return False
     session = headers.get("sessionid")
@@ -95,7 +94,6 @@ def update_user():
 @app.route("/api/user", methods=["GET"])
 def get_user_by_id():
     if not is_session_valid(request.headers):
-        print(request.headers)
         return {"message": f"invalid session {request.headers} / {kanu.auth.is_session_valid(request.headers.get('sessionid'))}"}, 401
     
     if "id" not in request.args:
@@ -181,14 +179,14 @@ def update_user_location():
     
 @app.route("/api/room", methods=["POST"])
 def request_room():
-    if not is_session_valid(request.headers):
+    if not is_session_valid(request.json):
         return {"message": "invalid session"}, 401
     
     required_fields = ["otheruserid"]
     if not arg_check(required_fields, request.json):
         return {"message": "missing required fields"}, 400
     
-    user = kanu.user.get_user(session=request.headers.get("sessionid"))
+    user = kanu.user.get_user(session=request.json.get("sessionid"))
     
     if user.id == request.json["otheruserid"]:
         return {"message": "cannot request room with yourself"}, 400
@@ -267,6 +265,19 @@ def get_message():
     messages = kanu.message.get_message(room.id)
     rtn = {"messages": [message.to_dict() for message in messages]}
     return json.dumps(rtn, ensure_ascii=False), 200
+
+@app.route("/api/dtoken", methods=["POST"])
+def set_device_token():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    required_fields = ["token"]
+    if not arg_check(required_fields, request.json):
+        return {"message": "missing required fields"}, 400
+    
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
+    kanu.user.set_device_token(user, request.json["token"])
+    return {"message": "success"}, 200
 
 if __name__ == "__main__":
     kanu.setup()
