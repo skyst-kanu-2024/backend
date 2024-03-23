@@ -10,4 +10,5 @@ RUN pip install -r requirements.txt
 
 ADD . .
 
-CMD [ "gunicorn", "app:app", "-b", "0.0.0.0:5000", "--log-level", "info", "-w", "2", "--threads", "2", "--worker-class", "gthread"]
+#CMD [ "gunicorn", "app:app", "-b", "0.0.0.0:5000", "--log-level", "info", "-w", "2", "--threads", "2", "--worker-class", "gthread"]
+CMD [ "python3", "app.py" ]
