@@ -41,7 +41,7 @@ def setup():
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS user_location(
-            user_id VARCHAR(32) NOT NULL PRIMARY KEY,
+            user_id INT NOT NULL PRIMARY KEY,
             lat DOUBLE
             lng DOUBLE
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
@@ -50,7 +50,7 @@ def setup():
     )
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS user_device_token(
-            user_id VARCHAR(32) NOT NULL PRIMARY KEY,
+            user_id INT NOT NULL PRIMARY KEY,
             room_id VARCHAR(32)
             devicetoken VARCHAR(64)
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE

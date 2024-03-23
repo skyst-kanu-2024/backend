@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS hobby_name (
     )
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS hobby_match(
-            user_id VARCHAR(32) NOT NULL,
+            user_id INT NOT NULL,
             hobby_name VARCHAR(20),
             
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,

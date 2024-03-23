@@ -13,7 +13,7 @@ def setup():
     cursor = conn.cursor()
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS profile (
-    id char(32) NOT NULL UNIQUE,
+    id INT NOT NULL UNIQUE,
     mbti varchar(4) NOT NULL,
     introduce varchar(300) NOT NULL,
     FOREIGN KEY(id) REFERENCES user(id) ON DELETE CASCADE,
