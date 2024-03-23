@@ -21,6 +21,7 @@ class Config:
     password: str
     database: str
 
+
 def setup():
     kanu.config = Config()
     kanu.config.host = os.getenv("MYSQL_HOST")

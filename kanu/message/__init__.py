@@ -6,23 +6,23 @@ from uuid import uuid4
 import time
 
 class Message:
-    message:str
-    created_at:str
-    userid:str
+    message: str
+    created_at: str
+    userid: str
     
 def setup():
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS message(
-    id char(32) NOT NULL
-    message char(1000) NOT NULL,
-    created_at number NOT NULL,
-    userid str(32) NOT NULL,
+CREATE TABLE IF NOT EXISTS message (
+    id CHAR(32) NOT NULL,
+    message VARCHAR(1000) NOT NULL,
+    created_at INT NOT NULL,
+    userid CHAR(32) NOT NULL,
     FOREIGN KEY(userid) REFERENCES user(id) ON DELETE CASCADE,
     FOREIGN KEY(id) REFERENCES room(id) ON DELETE CASCADE,
     PRIMARY KEY(id)
-    )
+)
     """)
     
 def create_message(
