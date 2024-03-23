@@ -71,7 +71,12 @@ def setup():
 def add_user_device_token(
     user: User,
     devicetoken: str
-)
+):
+    conn= kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO user_device_token(user_id, devicetoken) VALUES (%s, %s)", (user.id, devicetoken)
+    )
 
 def get_user_device_token(
     user: User
