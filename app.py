@@ -53,7 +53,7 @@ def check_session():
         return {"message": "invalid session"}, 401
     return {"message": "valid session"}, 200
 
-@app.route("/api/auth", methods=["PORT"])
+@app.route("/api/auth", methods=["POST"])
 def google_auth():
     if "token" not in request.json:
         return {"message": "missing required field 'token'"}, 400
