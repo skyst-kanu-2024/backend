@@ -1,6 +1,5 @@
 import kanu
 import kanu.database
-import kanu.auth
 
 import hashlib
 import time
@@ -105,6 +104,7 @@ def create_user(
     userid = hashlib.md5(f"{name}{email}{time.time()}".encode()).hexdigest()
     query = "INSERT INTO user (id, name, email, gender, age, nickname, loc_agree) VALUES (%s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (userid, name, email, gender, age, nickname, loc_agree))
+    import kanu.auth
     kanu.auth.create_user(userid, password)
     conn.commit()
     conn.close()
@@ -122,6 +122,7 @@ def get_user(
         cursor = conn.cursor()
     basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
+        import kanu.auth
         userid = kanu.auth.get_user_by_session(session).id
 
     if userid:
