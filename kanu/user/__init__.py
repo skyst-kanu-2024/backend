@@ -64,7 +64,10 @@ class User:
     def with_profile(self) -> str:
         import kanu.profile
         this = self.to_dict()
-        profile = kanu.profile.get_profile(self)
+        try:
+            profile = kanu.profile.get_profile(self)
+        except:
+            return json.dumps(this, ensure_ascii=False)
         this.update({
             "mbti": profile.mbti,
             "introduce": profile.introduce,
