@@ -136,7 +136,7 @@ def get_user(
     if session:
         user = get_as_session(session)
         conn.close()
-        return User(**user)
+        return user
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))
