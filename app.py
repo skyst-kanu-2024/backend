@@ -267,42 +267,42 @@ def get_message():
     rtn = {"messages": [message.to_dict() for message in messages]}
     return json.dumps(rtn, ensure_ascii=False), 200
 
-dtoken = []
-dtokenmap = {}
+db = {}
 
-@app.route("/api/dtoken", methods=["POST"])
-def get_device_token():
-    if not is_session_valid(request.headers):
-        return {"message": "invalid session"}, 401
-    
-    global dtoken
-    global dotoeknmap
-    if len(dtoken) == 0:
-        dtokenmap.update({len(dtoken): request.headers.get("sessionid")})
-        dtoken.append(request.json["token"])
-        return {"message": "success"}, 200
-    else:
-        if request.json["token"] in dtoken:
-            return {"message": "already exist"}, 208
-        else:
-            dtokenmap.update({len(dtoken): request.headers.get("sessionid")})
-            dtoken.append(request.json["token"])
-            return {"message": "success"}, 200
+@app.route('/api/dtoken', methods=['POST'])
+def dtoken():
+    print(request.json)
+    roomid = request.json['roomid']
+    userid = request.json['userid']
+    token = request.json['token']
+    if roomid not in db:
+        db[roomid] = {
+            'userM': "1",
+            'userF': "2",
+            'roomid': roomid,
+            'userM_token': None,
+            'userF_token': None,
+        }
+    if userid == "1":
+        db[roomid]['userM_token'] = token
+    elif userid == "2":
+        db[roomid]['userF_token'] = token
+    return {'status': 'ok'}, 200
 
-@app.route("/api/dtoken", methods=["GET"])
-def get_device_token():
-    if not is_session_valid(request.headers):
-        return {"message": "invalid session"}, 401
+@app.route('/api/dtoken', methods=['GET'])
+def gettoken():
+    print(db)
+    roomid = str(request.args['roomid'])
+    userid = str(request.args['userid'])
     
-    global dtoken
-    global dtokenmap
-    if len(dtoken) < 2:
-        return {"message": "no device token"}, 400
-    else:
-        if dtokenmap[0] == request.headers.get("sessionid"):
-            return {"message": "success", "token": dtoken[1]}, 200
-        else:
-            return {"message": "success", "token": dtoken[0]}, 200
+    if roomid not in db:
+        return {'status': 'error'}, 404
+    if userid == "1" and db[roomid]['userF_token'] is not None:
+        return {'token': db[roomid]['userF_token']}, 200
+    elif userid == "2" and db[roomid]['userM_token'] is not None:
+        return {'token': db[roomid]['userM_token']}, 200
+    
+    return {'status': 'error'}, 404
 
 if __name__ == "__main__":
     kanu.setup()
