@@ -81,7 +81,7 @@ def get_all_user_location(
         """
     )
     data: list[tuple[str, float, float]] = cursor.fetchall()
-    ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng, in data]
+    raise ValueError(data)
     return ndata
     
 def get_near_user_distance(
