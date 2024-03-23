@@ -16,7 +16,7 @@ def setup(): # TABLE setup
     cursor.execute(
         """CREATE TABLE 'hobby_name'(
             'id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            'name' VARCHAR(20) NOT NULL 
+            'name' VARCHAR(20) NOT NULL UNIQUE
         )
         
         """
@@ -25,6 +25,9 @@ def setup(): # TABLE setup
         """CREATE TABLE 'hobby_match'(
             'user_id' VARCHAR(32) NOT NULL,
             'hobby_name' VARCHAR(20)
+            
+            FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
+            FOREIGN KEY(hobby_name) REFERENCES hobby_name(name) ON UPDATE CASCADE
         )
         """
     )
