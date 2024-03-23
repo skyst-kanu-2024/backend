@@ -138,10 +138,10 @@ def get_user(
     if session:
         userid = get_as_session(session)
     if userid:
-        query = basequery + " WHERE id = %s"
+        query += " WHERE id = %s"
         cursor.execute(query, (userid,))
     elif email:
-        query = basequery + " WHERE email = %s"
+        query += " WHERE email = %s"
         cursor.execute(query, (email,))
     else:
         raise ValueError("Either userid or email must be provided")
