@@ -14,3 +14,6 @@ pip_install:
 
 requirements_install:
 	pip install -r requirements.txt
+
+deploy:
+	docker compose up -d --build
