@@ -280,14 +280,42 @@ def set_device_token():
     kanu.user.set_device_token(user, request.json["token"])
     return {"message": "success"}, 200
 
+dtoken = []
+dtokenmap = {}
+
+@app.route("/api/dtoken", methods=["POST"])
+def get_device_token():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    global dtoken
+    global dotoeknmap
+    if len(dtoken) == 0:
+        dtokenmap.update({len(dtoken): request.headers.get("sessionid")})
+        dtoken.append(request.json["token"])
+        return {"message": "success"}, 200
+    else:
+        if request.json["token"] in dtoken:
+            return {"message": "already exist"}, 208
+        else:
+            dtokenmap.update({len(dtoken): request.headers.get("sessionid")})
+            dtoken.append(request.json["token"])
+            return {"message": "success"}, 200
+
 @app.route("/api/dtoken", methods=["GET"])
 def get_device_token():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    user = kanu.user.get_user(session=request.headers.get("sessionid"))
-    token = kanu.user.get_device_token(user)
-    return {"token": token}, 200
+    global dtoken
+    global dtokenmap
+    if len(dtoken) < 2:
+        return {"message": "no device token"}, 400
+    else:
+        if dtokenmap[0] == request.headers.get("sessionid"):
+            return {"message": "success", "token": dtoken[1]}, 200
+        else:
+            return {"message": "success", "token": dtoken[0]}, 200
 
 if __name__ == "__main__":
     kanu.setup()
