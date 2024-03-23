@@ -12,6 +12,22 @@ class Room:
     created_at : int
     detail_loc_agree_M : bool
     detail_loc_agree_F: bool
+
+    def __init__(
+        self,
+        id: str = None,
+        userM: str = None,
+        userF: str = None,
+        created_at: int = None,
+        detail_loc_agree_M: bool = None,
+        detail_loc_agree_F: bool = None
+    ):
+        self.id = id
+        self.userM = userM
+        self.userF = userF
+        self.created_at = created_at
+        self.detail_loc_agree_M = detail_loc_agree_M
+        self.detail_loc_agree_F = detail_loc_agree_F
     
 def setup():
     conn = kanu.database.Database()
@@ -89,12 +105,6 @@ def get_room_by_user(
     data = []
     for oneroom in roomlist:
         room = Room()
-        room.id = oneroom[0]
-        room.userM = oneroom[1]
-        room.userF = oneroom[2]
-        room.created_at = oneroom[3]
-        room.detail_loc_agree_M = oneroom[4]
-        room.detail_loc_agree_F = oneroom[5]
         data.append(room)
     return data
 
@@ -106,13 +116,7 @@ def get_room_by_id(
     query = "SELECT id, userM, userF, created_at, detail_loc_agree_M, detail_loc_agree_F FROM room WHERE id = %s"
     cursor.execute(query,(id,))
     oneroom = cursor.fetchone()
-    room = Room()
-    room.id = oneroom[0]
-    room.userM = oneroom[1]
-    room.userF = oneroom[2]
-    room.created_at = oneroom[3]
-    room.detail_loc_agree_M = oneroom[4]
-    room.detail_loc_agree_F = oneroom[5]
+    room = Room(**oneroom)
     return room
 
 def update_allow_user_loc(
