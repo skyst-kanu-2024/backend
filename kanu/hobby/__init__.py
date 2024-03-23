@@ -7,7 +7,7 @@ class HobbyName:
     name: str
 
 class HobbyMatch:
-    hobbyname: HobbyName.name
+    hobbyname: str
     user: User
 
 def setup(): # TABLE setup
