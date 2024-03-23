@@ -54,6 +54,7 @@ def login(email: str, password: str) -> str | None:
     cursor.execute("SELECT user.id FROM user JOIN user_pass ON user.id = user_pass.id WHERE user.email = %s AND user_pass.password = %s", (email, hashlib.sha256(password.encode()).hexdigest()))
     result = cursor.fetchone()
     if result is None:
+        conn.close()
         return None
     session = hashlib.md5(f"{result['id']}{time.time()}".encode()).hexdigest()
     cursor.execute("INSERT INTO user_session (id, session) VALUES (%s, %s)", (result['id'], session))
@@ -61,11 +62,14 @@ def login(email: str, password: str) -> str | None:
     conn.close()
     return session
 
-def get_userid_by_session(session: str) -> str:
+def get_user_by_session(session: str) -> kanu.user.User | None:
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM user_session WHERE session = %s", (session,))
     result = cursor.fetchone()
     if result is None:
+        conn.close()
         return None
-    return result[0]
+    user = kanu.user.get_user(userid=result[0], cursor=cursor)
+    conn.close()
+    return user

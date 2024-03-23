@@ -122,7 +122,7 @@ def get_user(
         cursor = conn.cursor()
     basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
-        userid = kanu.auth.get_userid_by_session(session)
+        userid = kanu.auth.get_user_by_session(session).id
 
     if userid:
         query += " WHERE id = %s"
