@@ -156,10 +156,6 @@ def get_nearby_users():
     session = request.headers.get("sessionid")
     user = kanu.auth.get_user_by_session(session)
 
-    # user_id와 max_distance를 검증하는 간단한 로직
-    if not user.id is None:
-        return {"message": "missing required field 'user id'"}, 400
-
     # 실제 환경에서는 user_id로 User 객체를 찾는 로직이 필요함
     try:
         near_users = kanu.location.get_near_user_distance(user)
