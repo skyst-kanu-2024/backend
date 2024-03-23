@@ -122,7 +122,7 @@ def get_user_hobby():
     hobbies = kanu.hobby.get_user_hobby(user)
     return {"hobbies": hobbies}, 200
 
-@app.route("/api/userhobby/<hobbyName:hobbyName>", methods=["DELETE"])
+@app.route("/api/userhobby/<hobbyName>", methods=["DELETE"])
 def delete_user_hobby(hobbyName):
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
