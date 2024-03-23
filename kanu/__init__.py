@@ -41,3 +41,4 @@ def setup():
     kanu.hobby.setup()
     kanu.room.setup()
     kanu.message.setup()
+    kanu.location.setup()
