@@ -35,7 +35,7 @@ def create_hobby( #만약 hobby가 존재하지 않으면 추가
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO hobby_name(name) VALUES %s", (name)
+        "INSERT INTO hobby_name(name) VALUES (%s)", (name)
     )
     pass
 
@@ -61,8 +61,8 @@ def update_hobby( #아마 쓰지는 않을 거 같은데... admin 계정이 할 
     cursor = conn.cursor()
     cursor.execute(
         """UPDATE hobby_name
-            SET name=(%s)
-            WHERE id=(%d)
+            SET name=%s
+            WHERE id=%d
         """, (hobbyname), (id)
     )
     pass
@@ -74,7 +74,7 @@ def delete_hobby( #마찬가지 admin에서 hobby 종류 삭제할 때
     cursor = conn.cursor()
     cursor.execute(
         """DELETE FROM hobby_name
-            WHERE name=(%s)
+            WHERE name=%s
         """, (hobbyname)
     )
     pass
@@ -86,10 +86,12 @@ def get_user_hobby( #userHobby 가져올 때
     cursor = conn.cursor()
     cursor.execute(
         """SELECT * FROM hobby_match
-            WHERE user_id=(%s)
+            WHERE user_id=%s
         """, (userid)
     )
-    pass
+    data: list[tuple[int, str]] = cursor.fetchall()
+    ndata = [HobbyMatch(userid=user_id, hobbyname=hobby_name) for user_id, hobby_name in data]
+    return ndata
 
 def update_user_hobby( #user가 본인 hobby update 할 때, 근데 이건 사용하면 안 될 듯!!!!!!!
     userid: User.id,
@@ -99,8 +101,8 @@ def update_user_hobby( #user가 본인 hobby update 할 때, 근데 이건 사�
     cursor = conn.cursor()
     cursor.execute(
         """UPDATE hobby_match
-            SET hobbyname=(%s)
-            WHERE id=(%s)
+            SET hobbyname=%s
+            WHERE id=%s
         """, (hobbyname), (userid)
     )
     pass
@@ -113,8 +115,8 @@ def delete_user_hobby( #user가 본인 hobby 삭제 할 때
     cursor = conn.cursor()
     cursor.execute(
         """DELETE FROM hobby_match
-            WHERE user_id=(%s) AND name=(%s) 
-        """, (userid), (hobbyname)
+            WHERE user_id=%s AND name=%s
+        """, (userid),(hobbyname)
     )
     pass
 
