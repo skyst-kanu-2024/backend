@@ -3,7 +3,7 @@ version: '3'
 services:
   proxy:
     image: nginx:latest
-    container_name: skyst_proxy
+    container_name: skyst_proxy.skyst.com
     depends_on:
       - server
       - socket
@@ -14,7 +14,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: skyst_db
+    container_name: skyst_db.skyst.com
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?err}
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
@@ -23,7 +23,7 @@ services:
 
   server:
     build: .
-    container_name: skyst_server
+    container_name: skyst_server.skyst.com
     depends_on:
       - db
     environment:
@@ -35,7 +35,7 @@ services:
   
   socket:
     build: .
-    container_name: skyst_socket
+    container_name: skyst_socket.skyst.com
     depends_on:
       - db
       - server
