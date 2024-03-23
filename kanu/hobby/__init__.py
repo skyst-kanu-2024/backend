@@ -47,7 +47,11 @@ def get_hobby( #hobby들이 뭐 있는지 불러옴.
     cursor.execute(
         "SELECT * FROM hobby_name"
     )
-    pass
+    data: list[tuple[int, str]] = cursor.fetchall()
+    ndata: list[HobbyName] = [HobbyName(id=id, name=name) for id, name in data]
+    return ndata
+        
+    
 
 def update_hobby( #아마 쓰지는 않을 거 같은데... admin 계정이 할 수 있는 것일듯?
     id: id,
