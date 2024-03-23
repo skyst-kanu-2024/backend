@@ -1,5 +1,6 @@
 import kanu
 import kanu.database
+import kanu.auth
 
 import hashlib
 import time
@@ -11,6 +12,7 @@ class User:
     gender: kanu.gender
     age: int
     nickname: str
+    loc_agree: bool
     
     def __init__(
         self,
@@ -20,6 +22,7 @@ class User:
         gender: kanu.gender,
         age: int,
         nickname: str = None,
+        loc_agree: bool = False,
     ):
         self.id = id
         self.name = name
@@ -27,8 +30,9 @@ class User:
         self.gender = gender,
         self.age = age
         self.nickname = nickname
+        self.loc_agree = loc_agree
 
-    def check_differenct(self, user: "User") -> bool:
+    def check_difference(self, user: "User") -> bool:
         return (
             self.gender != user.gender or
             self.age != user.age or
@@ -47,10 +51,13 @@ CREATE TABLE IF NOT EXISTS user (
     gender INTEGER NOT NULL,
     age INTEGER NOT NULL,
     nickname VARCHAR(20),
+    loc_agree BOOLEAN DEFAULT FALSE,
     PRIMARY KEY(id),
     UNIQUE(id, email)
 );
     """)
+    # index for email
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_user_email ON user(email)")
     conn.commit()
     conn.close()
     
@@ -60,14 +67,22 @@ def create_user(
     email: str,
     gender: kanu.gender,
     age: int,
+    password: str,
     nickname: str = None,
+    loc_agree: bool = False,
 ) -> User:
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    # {name}{email}{time.time()}
+    
+    # Check that the email is not already in use
+    cursor.execute("SELECT id FROM user WHERE email = %s", (email,))
+    if cursor.fetchone() is not None:
+        raise ValueError("Email already in use")
+
     userid = hashlib.md5(f"{name}{email}{time.time()}".encode()).hexdigest()
-    query = "INSERT INTO user (id, name, email, gender, age, nickname) VALUES (%s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (userid, name, email, gender, age, nickname))
+    query = "INSERT INTO user (id, name, email, gender, age, nickname, loc_agree) VALUES (%s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (userid, name, email, gender, age, nickname, loc_agree))
+    kanu.auth.create_user(userid, password)
     conn.commit()
     conn.close()
     return User(userid, name, email, gender, age, nickname)
@@ -79,7 +94,7 @@ def get_user(
 ) -> User:
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    basequery = "SELECT id, name, email, gender, age, nickname FROM user"
+    basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if userid:
         query += " WHERE id = %s"
         cursor.execute(query, (userid,))
@@ -102,9 +117,9 @@ def update_user(
         raise ValueError("Email cannot be changed")
     if dbuser.name != user.name:
         raise ValueError("Name cannot be changed")
-    if user.check_differenct(dbuser):
-        query = "UPDATE user SET gender = %s, age = %s, nickname = %s WHERE id = %s"
-        cursor.execute(query, (user.gender, user.age, user.nickname, user.id))
+    if user.check_difference(dbuser):
+        query = "UPDATE user SET gender = %s, age = %s, nickname = %s, loc_agree = %s WHERE id = %s"
+        cursor.execute(query, (user.gender, user.age, user.nickname, user.loc_agree, user.id))
         conn.commit()
     conn.close()
 
