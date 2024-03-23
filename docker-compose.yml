@@ -4,6 +4,9 @@ services:
   proxy:
     image: nginx:latest
     container_name: skyst_proxy
+    depends_on:
+      - server
+      - socket
     ports:
       - "${PORT:?err}:80"
     volumes:
@@ -35,6 +38,7 @@ services:
     container_name: skyst_socket
     depends_on:
       - db
+      - server
     environment:
     - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
     - MYSQL_USER=${MYSQL_USER:?err}
