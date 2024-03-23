@@ -23,13 +23,15 @@ def setup():
     created_at int NOT NULL,
     detail_loc_agree_M boolean DEFAULT FALSE,
     detail_loc_agree_F boolean DEFAULT FALSE,
+    FOREIGN KEY(userM) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY(userF) REFERENCES user(id) ON DELETE CASCADE,
     PRIMARY KEY (id),
     unique (id,userM,userF)
     )
     """)
-    cursor.execute("""
-    CREATE INDEX IF NOT EXISTS idx_room_people ON room(userM,userF)
-    """)
+    #cursor.execute("""
+    #CREATE INDEX IF NOT EXISTS idx_room_people ON room(userM,userF)
+    #""")
     
 def create_room(
     userM:str,

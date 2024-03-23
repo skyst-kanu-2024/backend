@@ -13,7 +13,9 @@ def setup():
 CREATE TABLE IF NOT EXISTS user_pass (
     id CHAR(32) NOT NULL,
     password VARCHAR(64) NOT NULL,
+    FOREIGN KEY(id) REFERENCES user(id) ON DELETE CASCADE,
     PRIMARY KEY(id)
+    
 );
     """)
     cursor.execute("""
@@ -21,6 +23,7 @@ CREATE TABLE IF NOT EXISTS user_session (
     id CHAR(32) NOT NULL,
     session CHAR(32) NOT NULL,
     PRIMARY KEY(session),
+    FOREIGN KEY(id) REFERENCES user(id) ON DELETE CASCADE,
     UNIQUE(session)
 );
     """)

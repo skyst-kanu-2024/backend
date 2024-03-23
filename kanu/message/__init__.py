@@ -18,7 +18,10 @@ def setup():
     id char(32) NOT NULL
     message char(1000) NOT NULL,
     created_at number NOT NULL,
-    userid str(32) NOT NULL
+    userid str(32) NOT NULL,
+    FOREIGN KEY(userid) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY(id) REFERENCES room(id) ON DELETE CASCADE,
+    PRIMARY KEY(id)
     )
     """)
     
