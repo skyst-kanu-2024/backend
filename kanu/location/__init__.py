@@ -40,7 +40,7 @@ def setup():
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        """CREATE TABLE 'user_location'(
+        """CREATE TABLE IF NOT EXISTS 'user_location'(
             'user_id' VARCHAR(32) NOT NULL PRIMARY KEY,
             'lat' DOUBLE
             'lng' DOUBLE
@@ -49,7 +49,7 @@ def setup():
         """
     )
     cursor.execute(
-        """CREATE TABLE 'user_device_token'(
+        """CREATE TABLE IF NOT EXISTS 'user_device_token'(
             'user_id' VARCHAR(32) NOT NULL PRIMARY KEY,
             'room_id' VARCHAR(32)
             'devicetoken' VARCHAR(64)

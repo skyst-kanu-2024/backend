@@ -4,12 +4,12 @@ import pymysql.cursors
 
 class Database:
     def __init__(self):
-        host = kanu.config['database']['host']
-        user = kanu.config['database']['user']
-        password = kanu.config['database']['password']
-        db = kanu.config['database']['db']
+        host = kanu.config.host
+        user = kanu.config.user
+        password = kanu.config.password
+        db = kanu.config.db
         
-        self.connection = pymysql.connect(host=host,
+        self.connection = pymysql.connect(
             host=host,
             user=user,
             password=password,
@@ -26,4 +26,6 @@ class Database:
     
     def commit(self):
         self.connection.commit()
-    
+
+def setup():
+    pass
