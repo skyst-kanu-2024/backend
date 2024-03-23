@@ -6,7 +6,6 @@ from uuid import uuid4
 import time
 
 class Message:
-    id:str
     message:str
     created_at:str
     userid:str
@@ -42,13 +41,21 @@ def create_message(
 def get_message(
     id:str,
     page:int
-):
+)->list[Message]:
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("""
-    SELECT (id,message,created_at,userid) FROM message ORDER BY created_at DESC LIMIT 10 OFFSET %s
-    """,page*10)
-    cursor
+    SELECT (id,message,created_at,userid) FROM message WHERE id = %s ORDER BY created_at DESC LIMIT 100 OFFSET %s
+    """,(id,page))
+    msglist = cursor.fetchall()
+    data = []
+    for onemsg in msglist:
+        msg = Message()
+        msg.message = onemsg[1]
+        msg.created_at = onemsg[2]
+        msg.userid = onemsg[3]
+        data.append(msg)
+    return data
 
     
 '''def delete_message(

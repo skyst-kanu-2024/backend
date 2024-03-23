@@ -1,5 +1,3 @@
-import uuid
-
 import kanu
 import kanu.database
 from kanu import user
@@ -20,8 +18,9 @@ def setup():
     id char(32) NOT NULL,
     userM char(32) NOT NULL,
     userF char(32) NOT NULL,
-    created_at number NOT NULL,
-    loc_agree_both boolean DEFAULT FALSE,
+    created_at int NOT NULL,
+    detail_loc_agree_M boolean DEFAULT FALSE,
+    detail_loc_agree_F boolean DEFAULT FALSE,
     PRIMARY KEY (id),
     unique (id,userM,userF)
     )
@@ -32,12 +31,12 @@ def setup():
     
 def create_room(
     userM:str,
-    userF:str,
+    userF:str
 )-> Room:
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("""
-    SELECT id, userM,userF, created_at from room WHERE userM = %s and userF = %s
+    SELECT (id, userM,userF, created_at) from room WHERE userM = %s and userF = %s
     """,(userM,userF))
     exist = cursor.fetchone()
     if exist:
@@ -73,7 +72,7 @@ def get_room(
 
     elif user.gender == kanu.gender.F:
         cursor.execute("""
-        SELECT * FROM room WHERE userF = %s
+        SELECT (id,userM,userF,created_at) FROM room WHERE userF = %s
         """,(user.id))
         roomlist = cursor.fetchall()
     else:
@@ -84,9 +83,24 @@ def get_room(
         room.id = oneroom[0]
         room.userM = oneroom[1]
         room.userF = oneroom[2]
-        room.create_at = oneroom[3]
+        room.created_at = oneroom[3]
         data.append(room)
     return data
 
-
-    
+def update_allow_user_loc(
+    user:kanu.user.User,
+    id:str,
+    agree:bool
+):
+    conn = kanu.database.Database()
+    cursor = conn.cursor()
+    if user.gender == kanu.gender.M:
+        cursor.execute("""
+        UPDATE room SET detail_loc_agreeM = %s WHERE id = %s and userM = %s
+        """,(agree,id,user.id))
+    elif user.gender == kanu.gender.F:
+        cursor.execute("""
+        UPDATE room SET detail_loc_agreeF = %s WHERE id = %s and userF = %s
+        """, (agree, id, user.id))
+    else:
+        raise ValueError("User is not Male/Female")
