@@ -104,7 +104,7 @@ def get_user_hobby( #userHobby 가져올 때
 
 def create_user_hobby( #userhobby 추가
     user: User,
-    hobbyname: HobbyName.name,
+    hobbyname: str,
 ) -> HobbyName:
     conn= kanu.database.Database()
     cursor = conn.cursor()
@@ -115,7 +115,7 @@ def create_user_hobby( #userhobby 추가
 
 def update_user_hobby( #user가 본인 hobby update 할 때, 근데 이건 사용하면 안 될 듯!!!!!!!
     user: User,
-    hobbyname: HobbyName.name,
+    hobby: HobbyName,
 ) -> HobbyName:
     conn= kanu.database.Database()
     cursor = conn.cursor()
@@ -123,20 +123,20 @@ def update_user_hobby( #user가 본인 hobby update 할 때, 근데 이건 사�
         """UPDATE hobby_match
             SET hobbyname=%s
             WHERE id=%s
-        """, (hobbyname, user.id)
+        """, (hobby.name, user.id)
     )
     pass
 
 def delete_user_hobby( #user가 본인 hobby 삭제 할 때
     user: User,
-    hobbyname: HobbyName.name,
+    hobby: HobbyName,
 )-> HobbyMatch:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """DELETE FROM hobby_match
             WHERE user_id=%s AND name=%s
-        """, (user.id, hobbyname)
+        """, (user.id, hobby.name)
     )
     pass
 
