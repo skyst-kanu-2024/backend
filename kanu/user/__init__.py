@@ -140,7 +140,7 @@ def get_user(
 ) -> User:
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    query = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
+    query = "SELECT id, name, email, gender, age, nickname, loc_agree, picture FROM user"
     if session:
         user = get_as_session(session)
         conn.close()
@@ -174,3 +174,12 @@ def update_user(
     conn.close()
 
     return True
+
+def get_all_user():
+    conn = kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name, email, gender, age, nickname, loc_agree, picture FROM user")
+    users = cursor.fetchall()
+    conn.close()
+    return [User(**user) for user in users]
+

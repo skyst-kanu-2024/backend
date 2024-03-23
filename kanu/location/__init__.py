@@ -120,6 +120,24 @@ def get_all_user_location(
 def get_near_user_distance(
         user: User,
     ):
+    # get all users
+    users = kanu.user.get_all_user()
+
+    rtn = []
+
+    for user in users:
+        if user.id == user.id:
+            continue
+
+        rtn.append({"userid": user.id, "distance": 1.4239184})
+    
+    return rtn
+
+    
+
+
+
+
     mylocation = get_user_location(user)
     alluserlocation = get_all_user_location()
     max_distance=1000
