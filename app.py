@@ -19,6 +19,7 @@ def arg_check(required_fields: list[str], args: dict) -> bool:
     
 
 def is_session_valid(headers: dict) -> bool:
+    print(headers)
     if "session_id" not in headers:
         return False
     session = headers.get("session_id")
