@@ -20,6 +20,11 @@ class UserDeviceToken:
     room: Room
     devicetoken: str
 
+    def __init__(self, user: User, room: Room, devicetoken: str):
+        self.user = user
+        self.room = room
+        self.devicetoken = devicetoken
+
 from math import radians, cos, sin, sqrt, atan2
 
 # Haversine 공식을 사용하여 두 지점 사이의 거리를 계산하는 함수 (결과 단위: 미터)
@@ -57,7 +62,7 @@ def setup():
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS user_device_token(
             user_id CHAR(32) NOT NULL PRIMARY KEY,
-            room_id CHAR(32),
+            room_id CHAR(32) NOT NULL,
             devicetoken VARCHAR(64),
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,
             FOREIGN KEY(room_id) REFERENCES room(id) ON DELETE CASCADE
@@ -187,9 +192,8 @@ def get_user_device_token(
             WHERE user_id=%s
         """, (user.id)
     )
-    data: list[tuple[str, str, str]] = cursor.fetchall()
-    ndata = [UserLocation(userid=user_id, roomid=room_id, devicetoken=device_token) for user_id, room_id, device_token, in data]
-    return ndata
+    data = cursor.fetchone()
+    return UserDeviceToken(user=user, room=kanu.room.get_room_by_id(data["room_id"]), devicetoken=data["devicetoken"])
 
 def update_user_device_token(
     user: User,
