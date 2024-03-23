@@ -20,9 +20,9 @@ def arg_check(required_fields: list[str], args: dict) -> bool:
 
 def is_session_valid(headers: dict) -> bool:
     print(headers)
-    if "session_id" not in headers:
+    if "sessionid" not in headers:
         return False
-    session = headers.get("session_id")
+    session = headers.get("sessionid")
     return kanu.auth.is_session_valid(session)
 
 # AUTH API ENDPOINTS
@@ -72,7 +72,7 @@ def get_user():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     return user.with_profile(), 200
 
 @app.route("/api/me", methods=["POST"])
@@ -84,7 +84,7 @@ def update_user():
     if not arg_check(required_fields, request.json):
         return {"message": "missing required fields"}, 400
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     user.change(**request.json)
     kanu.user.update_user(user)
     return {"message": "success"}, 200
@@ -93,7 +93,7 @@ def update_user():
 def get_user_by_id():
     if not is_session_valid(request.headers):
         print(request.headers)
-        return {"message": f"invalid session {request.headers} / {kanu.auth.is_session_valid(request.headers.get('session_id'))}"}, 401
+        return {"message": f"invalid session {request.headers} / {kanu.auth.is_session_valid(request.headers.get('sessionid'))}"}, 401
     
     if "id" not in request.args:
         return {"message": "missing required fields 'id'"}, 400
@@ -135,7 +135,7 @@ def get_user_hobby():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     hobbies = kanu.hobby.get_user_hobby(user)
     return {"hobbies": hobbies}, 200
 
@@ -144,7 +144,7 @@ def delete_user_hobby(hobbyName):
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    session = request.headers.get("session_id")
+    session = request.headers.get("sessionid")
     user = kanu.auth.get_user_by_session(session)
     kanu.hobby.delete_user_hobby(user, hobbyName)
 
@@ -153,7 +153,7 @@ def get_nearby_users():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    session = request.headers.get("session_id")
+    session = request.headers.get("sessionid")
     user = kanu.auth.get_user_by_session(session)
 
     # user_id와 max_distance를 검증하는 간단한 로직
@@ -172,7 +172,7 @@ def update_user_location():
     if not is_session_valid(request. headers):
         return {"message": "invalid session"}, 401
     
-    session = request.headers.get("session_id")
+    session = request.headers.get("sessionid")
     user = kanu.auth.get_user_by_session(session)
     
     required_fields = ["lat", "lng"]
@@ -201,7 +201,7 @@ def request_room():
     if not arg_check(required_fields, request.json):
         return {"message": "missing required fields"}, 400
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     
     if user.id == request.json["otheruserid"]:
         return {"message": "cannot request room with yourself"}, 400
@@ -226,7 +226,7 @@ def get_room():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     rooms = kanu.room.get_room_by_user(user)
     return {"rooms": [room.id for room in rooms]}, 200
 
@@ -235,7 +235,7 @@ def get_room_requests():
     if not is_session_valid(request.headers):
         return {"message": "invalid session"}, 401
     
-    user = kanu.user.get_user(session=request.headers.get("session_id"))
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
     if user not in roomreq:
         return {"message": "no requests", "requests": []}, 200
     requests = [user.id for user in roomreq[user]]
