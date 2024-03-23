@@ -112,8 +112,7 @@ def get_user_location(
             WHERE user_id=%s
         """, (user.id)
     )
-    data = cursor.fetchall()
-    raise ValueError(data)
+    data = cursor.fetchone()
     return UserLocation(user=user, lat=data["lat"], lng=data["lng"])
 
 def update_all_user_location( # 안 씀 절대로
