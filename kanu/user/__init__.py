@@ -13,6 +13,7 @@ class User:
     age: int
     nickname: str
     loc_agree: bool
+    picture: str
     
     def __init__(
         self,
@@ -21,6 +22,7 @@ class User:
         email: str,
         gender: kanu.gender,
         age: int,
+        picture: str = None,
         nickname: str = None,
         loc_agree: bool = False,
     ):
@@ -31,6 +33,7 @@ class User:
         self.age = age
         self.nickname = nickname
         self.loc_agree = loc_agree
+        self.picture = picture
 
     def check_difference(self, user: "User") -> bool:
         return (
@@ -89,6 +92,7 @@ CREATE TABLE IF NOT EXISTS user (
     age INTEGER,
     nickname VARCHAR(20),
     loc_agree BOOLEAN DEFAULT FALSE,
+    picture VARCHAR(1000),
     PRIMARY KEY(id),
     UNIQUE(id, email)
 );

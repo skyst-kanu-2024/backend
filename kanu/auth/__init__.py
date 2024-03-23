@@ -76,16 +76,16 @@ def login(token: str) -> str | None:
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), kanu.config.google_client_id)
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
-        raise ValueError(idinfo)
         userid = idinfo['sub']
         email = idinfo['email']
         name = idinfo['name']
+        pictureurl = idinfo['picture']
         conn = kanu.database.Database()
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM user WHERE email = %s", (email,))
         result = cursor.fetchone()
         if result is None:
-            cursor.execute("INSERT INTO user (id, name, email) VALUES (%s, %s, %s)", (userid, name, email))
+            cursor.execute("INSERT INTO user (id, name, email, picture, nickname) VALUES (%s, %s, %s)", (userid, name, email, pictureurl, name))
             conn.commit()
         session = hashlib.md5(f"{userid}{time.time()}".encode()).hexdigest()
         cursor.execute("INSERT INTO user_session (id, session) VALUES (%s, %s)", (userid, session))
@@ -93,7 +93,7 @@ def login(token: str) -> str | None:
         conn.close()
         return session
     except ValueError as e:
-        raise e
+        return None
 
 def get_user_by_session(session: str) -> kanu.user.User | None:
     conn = kanu.database.Database()
