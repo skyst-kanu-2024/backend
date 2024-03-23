@@ -164,7 +164,6 @@ def get_nearby_users():
 @app.route('/api/location', methods=['POST']) #유저 본인의 location update하는 로직
 def update_user_location():
     if not is_session_valid(request.headers):
-        raise ValueError(request.headers)
         return {"message": "invalid session"}, 401
     
     session = request.headers.get("sessionid")
