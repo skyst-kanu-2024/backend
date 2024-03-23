@@ -30,7 +30,7 @@ services:
     - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
     - MYSQL_USER=${MYSQL_USER:?err}
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
-    - MYSQL_HOST=skyst_db
+    - MYSQL_HOST=skyst_db.skyst.com
     command: ["python3", "app.py"]
   
   socket:
@@ -43,5 +43,5 @@ services:
     - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
     - MYSQL_USER=${MYSQL_USER:?err}
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
-    - MYSQL_HOST=skyst_db
+    - MYSQL_HOST=skyst_db.skyst.com
     command: ["python3", "app_message.py"]
