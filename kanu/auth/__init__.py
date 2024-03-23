@@ -92,8 +92,8 @@ def login(token: str) -> str | None:
         conn.commit()
         conn.close()
         return session
-    except ValueError:
-        return None
+    except ValueError as e:
+        raise ValueError
 
 def get_user_by_session(session: str) -> kanu.user.User | None:
     conn = kanu.database.Database()
