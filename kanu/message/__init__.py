@@ -1,14 +1,32 @@
 import kanu
-from kanu import user
 import kanu.database
-from kanu import room
-from uuid import uuid4
 import time
+import json
 
 class Message:
     message: str
-    created_at: str
+    created_at: int
     userid: str
+
+    def __init__(
+        self,
+        message: str = None,
+        created_at: int = None,
+        userid: str = None
+    ):
+        self.message = message
+        self.created_at = created_at
+        self.userid = userid
+
+    def to_dict(self) -> dict:
+        return {
+            "message": self.message,
+            "created_at": self.created_at,
+            "userid": self.userid
+        }
+    
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict())
     
 def setup():
     conn = kanu.database.Database()
@@ -42,14 +60,14 @@ def create_message(
     return msg
 
 def get_message(
-    id:str,
-    page:int
+    id: str,
+    page: int = 0
 )->list[Message]:
     conn = kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute("""
     SELECT (id,message,created_at,userid) FROM message WHERE id = %s ORDER BY created_at DESC LIMIT 100 OFFSET %s
-    """,(id,page))
+    """,(id, page))
     msglist = cursor.fetchall()
     data = []
     for onemsg in msglist:

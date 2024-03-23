@@ -7,6 +7,7 @@ import kanu.user
 import kanu.hobby
 import kanu.room
 import kanu.location
+import kanu.message
 
 
 app = Flask(__name__)
@@ -234,6 +235,25 @@ def get_room_requests():
     requests = [user.id for user in roomreq[user]]
     return {"requests": requests}, 200
 
+
+@app.route("/api/message", methods=["POST"])
+def send_message():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    required_fields = ["room_id", "message"]
+    if not arg_check(required_fields, request.json):
+        return {"message": "missing required fields"}, 400
+    
+    user = kanu.user.get_user(session=request.headers.get("sessionid"))
+    room = kanu.room.get_room_by_id(request.json["room_id"])
+    if room is None:
+        return {"message": "room not found"}, 404
+    if user not in room.users:
+        return {"message": "user not in room"}, 403
+    
+    kanu.message.create_message(room.id, request.json["message"], user.id)
+    return {"message": "success"}, 200
 
 if __name__ == "__main__":
     kanu.setup()

@@ -29,7 +29,6 @@ def handle_disconnect():
 
 @socketio.on('join')
 def handle_join(data):
-    print(data)
     room_id = data.get('room_id')
     '''user = kanu.auth.get_user_by_session(session_id)
     if not kanu.room.is_user_in_room(user,room_id):
