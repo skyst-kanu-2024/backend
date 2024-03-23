@@ -64,9 +64,8 @@ def get_message(
 )->list[Message]:
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    cursor.execute("""
-    SELECT (id,message,created_at,userid) FROM message WHERE id = %s ORDER BY created_at DESC LIMIT 100 OFFSET %s
-    """,(id, page))
+    query = "SELECT id, message, created_at, userid FROM message WHERE id = %s ORDER BY created_at DESC LIMIT 100 OFFSET %s"
+    cursor.execute(query,(id,page))
     msglist = cursor.fetchall()
     data = []
     for onemsg in msglist:
