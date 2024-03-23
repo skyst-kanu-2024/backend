@@ -11,6 +11,8 @@ services:
       - "${PORT:?err}:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - tklco_skyst
 
   db:
     image: mysql:8.0
@@ -20,6 +22,8 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
       - MYSQL_USER=${MYSQL_USER:?err}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
+    networks:
+      - tklco_skyst
 
   server:
     build: .
@@ -32,6 +36,8 @@ services:
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
     - MYSQL_HOST=skyst_db
     command: ["python3", "app.py"]
+    networks:
+      - tklco_skyst
   
   socket:
     build: .
@@ -45,3 +51,9 @@ services:
     - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
     - MYSQL_HOST=skyst_db
     command: ["python3", "app_message.py"]
+    networks:
+      - tklco_skyst
+
+networks:
+  tklco_skyst:
+    external: true
