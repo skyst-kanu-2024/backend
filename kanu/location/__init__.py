@@ -1,5 +1,6 @@
 import kanu
 import kanu.database
+import kanu.user
 from kanu.user import User
 from kanu.room import Room
 from math import radians, cos, sin, sqrt, atan2
@@ -79,7 +80,7 @@ def get_all_user_location(
         "SELECT user_id, lat, lng FROM user_location"
     )
     data = cursor.fetchall()
-    ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng in data]
+    ndata = [UserLocation(user=kanu.user.get_user(userid=user_id), lat=lat, lng=lng) for user_id, lat, lng in data]
     
     return ndata
     
