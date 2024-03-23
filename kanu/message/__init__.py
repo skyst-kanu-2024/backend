@@ -29,11 +29,11 @@ def create_message(
     id:str,
     message:str,
     userid : str
-)->Message:
+) -> Message:
     created_at = int(time.time())
     conn = kanu.database.Database()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO message(id,message,created_at,userid) VALUES (%s,%s,%s)",(id,message,created_at,userid))
+    cursor.execute("INSERT INTO message(id,message,created_at,userid) VALUES (%s,%s,%s,%s)",(id,message,created_at,userid))
     msg = Message()
     msg.id = id
     msg.message = message
