@@ -4,6 +4,8 @@ import kanu.user
 
 import hashlib
 import time
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
 def setup():
@@ -51,6 +53,7 @@ def is_session_valid(session: str) -> bool:
     conn.close()
     return result is not None
 
+'''
 def login(email: str, password: str) -> str | None:
     conn = kanu.database.Database()
     cursor = conn.cursor()
@@ -63,7 +66,33 @@ def login(email: str, password: str) -> str | None:
     cursor.execute("INSERT INTO user_session (id, session) VALUES (%s, %s)", (result['id'], session))
     conn.commit()
     conn.close()
-    return session
+    return session'''
+
+def login(token: str) -> str | None:
+    # google login with ios
+    # server google client id -> kanu.config.google_client_id
+    # server google client secret -> kanu.config.google_client_secret
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), kanu.config.google_client_id)
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        userid = idinfo['sub']
+        email = idinfo['email']
+        name = idinfo['name']
+        conn = kanu.database.Database()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM user WHERE email = %s", (email,))
+        result = cursor.fetchone()
+        if result is None:
+            cursor.execute("INSERT INTO user (id, name, email) VALUES (%s, %s, %s)", (userid, name, email))
+            conn.commit()
+        session = hashlib.md5(f"{userid}{time.time()}".encode()).hexdigest()
+        cursor.execute("INSERT INTO user_session (id, session) VALUES (%s, %s)", (userid, session))
+        conn.commit()
+        conn.close()
+        return session
+    except ValueError:
+        return None
 
 def get_user_by_session(session: str) -> kanu.user.User | None:
     conn = kanu.database.Database()

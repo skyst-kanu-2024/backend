@@ -53,6 +53,16 @@ def check_session():
         return {"message": "invalid session"}, 401
     return {"message": "valid session"}, 200
 
+@app.route("/api/auth", methods=["PORT"])
+def google_auth():
+    if "token" not in request.json:
+        return {"message": "missing required field 'token'"}, 400
+    
+    token = request.json["token"]
+    session = kanu.auth.login(token)
+    if session is None:
+        return {"message": "invalid token"}, 401
+    return {"session_id": session}, 200
 
 # USER API ENDPOINTS
 
