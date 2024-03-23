@@ -259,7 +259,7 @@ def get_message():
     room = kanu.room.get_room_by_id(request.args["roomid"])
     if room is None:
         return {"message": "room not found"}, 404
-    if not (room.userM == user or room.userF == user):
+    if not (room.userM == user.id or room.userF == user.id):
         return {"message": "user not in room"}, 403
     
     messages = kanu.message.get_message(room.id)
