@@ -83,7 +83,7 @@ def create_user_location(
     pass
 
 def get_all_user_location(    
-)->list[User]:
+)->list[UserLocation]:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
@@ -105,12 +105,12 @@ def get_near_user_distance(
     near_users = []
     for location in alluserlocation:
         # 현재 사용자일 경우 건너뛰기
-        if location.userid == user.id:
+        if location.user.id == user.id:
             continue
 
         distance = calculate_distance(mylocation.lat, mylocation.lng, location.lat, location.lng)
         if distance <= max_distance:
-            near_users.append((location.userid, distance))
+            near_users.append((location.user.id, distance))
     return near_users
     
 
