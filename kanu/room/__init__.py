@@ -12,6 +12,7 @@ class Room:
     created_at : int
     detail_loc_agree_M : bool
     detail_loc_agree_F: bool
+    
 def setup():
     conn = kanu.database.Database()
     cursor = conn.cursor()

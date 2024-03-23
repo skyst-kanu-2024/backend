@@ -5,11 +5,14 @@ import kanu
 import kanu.auth
 import kanu.user
 import kanu.hobby
+import kanu.room
 import kanu.location
 
 
 app = Flask(__name__)
 CORS(app)
+
+roomreq: dict[kanu.user.User: list[kanu.user.User]] = {}
 
 def arg_check(required_fields: list[str], args: dict) -> bool:
     return all(field in args for field in required_fields)
@@ -149,13 +152,57 @@ def nearby_users():
         return {"near users": near_users}, 200
     except Exception as e:
         return {'error': str(e)}, 500
+
+# ROOM API ENDPOINTS
     
+@app.route("/api/room", methods=["POST"])
+def request_room():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    required_fields = ["otheruserid"]
+    if not arg_check(required_fields, request.json):
+        return {"message": "missing required fields"}, 400
+    
+    user = kanu.user.get_user(session=request.headers.get("session"))
+    
+    if user.id == request.json["otheruserid"]:
+        return {"message": "cannot request room with yourself"}, 400
+    
+    otheruser = kanu.user.get_user(id=request.json["otheruserid"])
+    if user in roomreq and otheruser in roomreq[user]:
+        userM = user if user.gender == kanu.gender.M else otheruser
+        userF = user if user != userM else otheruser
+        room = kanu.room.create_room(userM, userF)
+        return {"message": "room created", "room_id": room.id}, 201
+    if otheruser in roomreq:
+        if user in roomreq[otheruser]:
+            return {"message": "already requested"}, 208
+        roomreq[otheruser].append(user)
+    else:
+        roomreq[otheruser] = [user]
 
+    return {"message": "requested"}, 200
 
+@app.route("/api/room", methods=["GET"])
+def get_room():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    user = kanu.user.get_user(session=request.headers.get("session"))
+    rooms = kanu.room.get_room_by_user(user)
+    return {"rooms": [room.id for room in rooms]}, 200
 
-
-
-
+@app.route("/api/room_requests", methods=["GET"])
+def get_room_requests():
+    if not is_session_valid(request.headers):
+        return {"message": "invalid session"}, 401
+    
+    user = kanu.user.get_user(session=request.headers.get("session"))
+    if user not in roomreq:
+        return {"message": "no requests", "requests": []}, 200
+    requests = [user.id for user in roomreq[user]]
+    return {"requests": requests}, 200
 
 
 if __name__ == "__main__":
