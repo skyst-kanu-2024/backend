@@ -134,7 +134,7 @@ def get_user(
     if not cursor:
         conn = kanu.database.Database()
         cursor = conn.cursor()
-    basequery = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
+    query = "SELECT id, name, email, gender, age, nickname, loc_agree FROM user"
     if session:
         userid = get_as_session(session)
         if userid.startswith("'"):
