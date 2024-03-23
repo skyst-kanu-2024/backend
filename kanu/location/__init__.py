@@ -90,6 +90,7 @@ def get_all_user_location(
         "SELECT user_id, lat, lng FROM user_location"
     )
     data = cursor.fetchall()
+    raise ValueError(data)
     ndata = [UserLocation(user=kanu.user.get_user(userid=user_id), lat=lat, lng=lng) for user_id, lat, lng in data]
     
     return ndata
