@@ -113,6 +113,7 @@ def get_user_location(
         """, (user.id)
     )
     data = cursor.fetchall()
+    raise ValueError(data)
     return UserLocation(user=user, lat=data["lat"], lng=data["lng"])
 
 def update_all_user_location( # 안 씀 절대로
