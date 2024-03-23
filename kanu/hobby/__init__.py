@@ -96,6 +96,17 @@ def get_user_hobby( #userHobby 가져올 때
     ndata = [HobbyMatch(userid=user_id, hobbyname=hobby_name) for user_id, hobby_name in data]
     return ndata
 
+def create_user_hobby( #userhobby 추가
+    userid: User.id,
+    hobbyname: HobbyName.name,
+) -> HobbyName:
+    conn= kanu.database.Database()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO hobby_match(user_id, hobbyname) VALUES (%s, %s)", (userid), (hobbyname)
+    )
+    pass
+
 def update_user_hobby( #user가 본인 hobby update 할 때, 근데 이건 사용하면 안 될 듯!!!!!!!
     userid: User.id,
     hobbyname: HobbyName.name,
