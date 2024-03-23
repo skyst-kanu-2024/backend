@@ -10,6 +10,11 @@ class UserLocation:
     lat: float
     lng: float
 
+    def __init__(self, user: User, lat: float, lng: float):
+        self.user = user
+        self.lat = lat
+        self.lng = lng
+
 class UserDeviceToken:
     user: User
     room: Room
