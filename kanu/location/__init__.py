@@ -57,14 +57,14 @@ def setup():
     )
 
 def create_user_location(
-    userid: User.id,
+    user: User,
     lat: float,
     lng: float
 ) -> UserLocation:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (userid), (lat), (lng)
+        "INSERT INTO user_location(user_id, lat, long) VALUES (%s, %f, %f)", (user.id), (lat), (lng)
     )
     pass
 
@@ -81,7 +81,10 @@ def get_all_user_location(
     ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng, in data]
     return ndata
     
-def get_near_user_distance(user, max_distance):
+def get_near_user_distance(
+        user: User,
+        max_distance: float
+    ):
     mylocation = get_user_location(user.id)
     alluserlocation = get_all_user_location()
 
@@ -98,21 +101,21 @@ def get_near_user_distance(user, max_distance):
     
 
 def get_user_location(
-    userid: User.id
+    user: User
 )->UserLocation:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """SELECT * FROM user_location
             WHERE user_id=%s
-        """, (userid)
+        """, (user.id)
     )
     data: list[tuple[str, float, float]] = cursor.fetchall()
     ndata = [UserLocation(userid=user_id, lat=lat, lng=lng) for user_id, lat, lng, in data]
     return ndata
 
 def update_user_location(
-    userid: User.id,
+    user: User,
     lat: float,
     lng: float
 )->UserLocation:
@@ -122,51 +125,54 @@ def update_user_location(
         """UPDATE user_location
             SET lat=%s, lng=%s
             WHERE user_id=%s
-        """, (lat), (lng), (userid)
+        """, (lat), (lng), (user.id)
     )
     pass
 
 def delete_user_hobby( #user가 본인 hobby 삭제 할 때
-    userid: User.id,
+    user: User
 )-> UserLocation:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """DELETE FROM user_location
             WHERE user_id=%s
-        """, (userid)
+        """, (user.id)
     )
     pass
 
 
 def create_user_device_token(
-    userid: User.id,
+    user: User,
     roomid: Room.id,
     devicetoken: str
 ) -> UserDeviceToken:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO user_device_token(user_id, room_id, device_token) VALUES (%s, %f, %f)", (userid), (roomid), (devicetoken)
-    )
+        """INSERT INTO 
+        user_device_token(user_id, room_id, device_token) 
+        VALUES (%s, %f, %f)""",
+        (user.id), (roomid), (devicetoken)
+        )
     pass
 
 def get_user_device_token(
-    userid: User.id
+    user: User
 )->UserDeviceToken:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """SELECT * FROM user_device_token
             WHERE user_id=%s
-        """, (userid)
+        """, (user.id)
     )
     data: list[tuple[str, str, str]] = cursor.fetchall()
     ndata = [UserLocation(userid=user_id, roomid=room_id, devicetoken=device_token) for user_id, room_id, device_token, in data]
     return ndata
 
 def update_user_device_token(
-    userid: User.id,
+    user: User,
     roomid: Room.id,
     devicetoken: str
 )->UserDeviceToken:
@@ -176,19 +182,19 @@ def update_user_device_token(
         """UPDATE user_device_token
             SET roomid=%s, lng=%s
             WHERE user_id=%s
-        """, (roomid), (devicetoken), (userid)
+        """, (roomid), (devicetoken), (user.id)
     )
     pass
 
 def delete_user_device_token( #user가 본인 hobby 삭제 할 때
-    userid: User.id
+    user: User
 )-> UserDeviceToken:
     conn= kanu.database.Database()
     cursor = conn.cursor()
     cursor.execute(
         """DELETE FROM user_device_token
             WHERE user_id=%s
-        """, (userid)
+        """, (user.id)
     )
     pass
 
